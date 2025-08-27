@@ -200,10 +200,10 @@ static int NetworkDelayTime(int[][] times, int n, int k)
 static Dictionary<Node, int> Dijkstra(Node head)
 {
     // 左神还有一个堆优化的版本在高级班
-    Dictionary<Node, int> distanceDic = new Dictionary<Node, int>();        // 从head到其他节点的距离
+    Dictionary<Node, int> distanceDic = new Dictionary<Node, int>();            // 从head到其他节点的距离
     distanceDic.Add(head, 0);
 
-    HashSet<Node> selectedNodes = new HashSet<Node>();      // 已经被利用完的节点
+    HashSet<Node> selectedNodes = new HashSet<Node>();                          // 已经被利用完的节点
     Node cur = GetMinDistanceAndUnselectedNode(distanceDic, selectedNodes);     // 在distanceDic中选一个value最小的  且不在selectedNodes中
     while (cur != null)
     {
@@ -223,6 +223,25 @@ static Dictionary<Node, int> Dijkstra(Node head)
         cur = GetMinDistanceAndUnselectedNode(distanceDic, selectedNodes);
     }
     return distanceDic;
+}
+static Dictionary<Node, int> Dijkstra2(Node head, int size)
+{
+    // 左神堆优化版的Dijkstra算法
+    NodeHeap nodeHeap = new NodeHeap(size);
+    nodeHeap.AddOrUpdateOrIgnore(head, 0);
+    Dictionary<Node, int> result = new Dictionary<Node, int>();
+    while(!nodeHeap.IsEmpty())
+    {
+        NodeRecord nodeRecord = nodeHeap.Pop();
+        Node node = nodeRecord.node;
+        int dis = nodeRecord.distance;
+        foreach (var edge in node.edges)
+        {
+            nodeHeap.AddOrUpdateOrIgnore(edge.to, edge.weight + dis);
+        }
+        result.Add(node, dis);
+    }
+    return result;
 }
 static Node GetMinDistanceAndUnselectedNode(Dictionary<Node, int> dict, HashSet<Node> set)
 {
