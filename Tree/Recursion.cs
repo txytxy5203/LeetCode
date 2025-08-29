@@ -12,6 +12,7 @@ namespace LeetCode
     {
         public static void AllRank(string str)
         {
+            // 再好好理解一下  我觉得写的比左神更好理解一些
             bool[] isChoosed = new bool[str.Length]; 
             AllRankRecur(isChoosed, "", str);
         }
@@ -21,20 +22,15 @@ namespace LeetCode
             {
                 Console.WriteLine(strFormer);
                 return;
-            }
-            bool[] a = new bool[isChoosed.Length + 1];
-            for (int i = 0; i < isChoosed.Length; i++)
-            {
-                a[i] = isChoosed[i];
-            }
-            
+            }      
             for (int i = 0;i < str.Length;i++)
             {
                 if (isChoosed[i])
                     continue;
-                a[i] = true;
+                isChoosed[i] = true;
                 string b = strFormer + str[i];
-                AllRankRecur(a, b, str);
+                AllRankRecur(isChoosed, b, str);
+                isChoosed[i] = false;                   // 回溯
             }
         }
         public static bool IsAllTrue(bool[] isChoosed)
