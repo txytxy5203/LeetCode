@@ -3,7 +3,7 @@ using System.Text;
 
 
 
-Console.WriteLine(BackTracking.TotalNQueens2(14));
+Recursion.AllRank("abc");
 
 #region Greedy Algorithm
 int FindMaximizedCapital(int k, int w, int[] profits, int[] capital)
