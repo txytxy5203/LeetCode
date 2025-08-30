@@ -2,8 +2,8 @@
 using System.Text;
 
 
-
-Recursion.AllRank("abcd");
+int[] nums = { 1, 5, 233, 7};
+Console.WriteLine(Recursion.PredictTheWinner(nums));
 
 #region Greedy Algorithm
 int FindMaximizedCapital(int k, int w, int[] profits, int[] capital)

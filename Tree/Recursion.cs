@@ -7,9 +7,36 @@ using System.Threading.Tasks;
 
 namespace LeetCode
 {
-
     public static class Recursion
     {
+        public static void ReverseStack(Stack<int> stack)
+        {
+            
+        }
+        public static bool PredictTheWinner(int[] nums)
+        {
+            // 感觉可以用dict去优化一下
+            int first = FirstPredictTheWinner(nums, 0, nums.Length - 1);
+            int second = SecondPredictTheWinner(nums, 0, nums.Length - 1);
+            return first >= second;
+        }
+
+        public static int FirstPredictTheWinner(int[] arr, int L, int R)
+        {
+            if(L == R)
+                return arr[L];
+            int left = arr[L] + SecondPredictTheWinner(arr, L + 1, R);
+            int right = arr[R] + SecondPredictTheWinner(arr, L, R - 1);
+            return Math.Max(left, right);       // 我先手 肯定拿max
+        }
+        public static int SecondPredictTheWinner(int[] arr, int L, int R)
+        {
+            if (L == R)
+                return 0;               // 这里也要注意
+            int left = FirstPredictTheWinner(arr, L + 1, R);
+            int right = FirstPredictTheWinner(arr, L, R - 1);
+            return Math.Min(left, right);       // 我后手  别人肯定只能让我拿最小的
+        }
         public static void AllRank(string str)
         {
             // 再好好理解一下  我觉得写的比左神更好理解一些
