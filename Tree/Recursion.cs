@@ -9,9 +9,72 @@ namespace LeetCode
 {
     public static class Recursion
     {
+        static int result = 0;
+
+        public static int TranslateToStr(string str)
+        {
+            TranslateToStrRecur(str, 0, "");
+            return result;
+        }
+        public static void TranslateToStrRecur(string str, int index, string former)
+        {
+            if(index == str.Length)
+            {
+                result++;
+                return;
+            }
+            if (str[0] == '0')
+                return;
+            // 这里还可以再优化一下  如果是3到9就不可能选两位了
+            if (index + 1 == str.Length || str[index + 1] != '0')               // 取一位
+            {
+                char offset = (char)('A' + str[index] - '0' - 1);
+                string a = former + offset;         // 这里要注意  "1"使用(int）强行转换会变成asc码
+                TranslateToStrRecur(str, index + 1, a);
+            }
+
+            if (index + 1 == str.Length)
+                return;        
+
+            if (index + 2 < str.Length && str[index + 2] != '0')                // 取两位
+            {
+                char b = (char)('A' + int.Parse(str.Substring(index, index + 1)) - 1);
+                if (b >= 'A' && b <= 'Z')
+                {
+                    TranslateToStrRecur(str, index + 2, former + b);
+                }
+            }
+            else if(index + 2 == str.Length)
+            {
+                char b = (char)('A' + int.Parse(str.Substring(index, index + 1)) - 1);
+                if (b >= 'A' && b <= 'Z')
+                {
+                    TranslateToStrRecur(str, index + 2, former + b);
+                }
+            }
+            
+        }
         public static void ReverseStack(Stack<int> stack)
         {
-            
+            // 这种递归的思路又和之前的不一样了
+            // 逆序一个栈 不使用额外的数据结构
+            if(stack.Count == 0)
+                return;
+            int i = GetStackBottom(stack);
+            ReverseStack(stack);
+            stack.Push(i);
+        }
+        public static int GetStackBottom(Stack<int> stack)
+        {
+            int result = stack.Pop();
+            if (stack.Count == 0)
+                return result;
+            else
+            {
+                int last = GetStackBottom(stack);
+                stack.Push(result);
+                return last;
+            }
         }
         public static bool PredictTheWinner(int[] nums)
         {
