@@ -3,30 +3,9 @@ using System.Text;
 
 
 
-ListNode a1 = new ListNode();    
-ListNode a2 = new ListNode();    
-ListNode a3 = new ListNode();    
-ListNode b1 = new ListNode();    
-ListNode b2 = new ListNode();    
-ListNode b3 = new ListNode();
+Console.WriteLine(String_.LongestPalindrome2("babad"));
 
-a1.val = 9;
-//a2.val = 4;
-//a3.val = 3;
-//a1.next = a2;
-//a2.next = a3;
-b1.val = 9;
-b2.val = 9;
-//b3.val = 4;
-b1.next = b2;
-//b2.next = b3;
 
-ListNode x = AddTwoNumbers(a1, b1);
-while (x != null)
-{
-    Console.WriteLine(x.val);
-    x = x.next;
-}
 #region ListNode
 ListNode AddTwoNumbers(ListNode l1, ListNode l2)
 {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices.Marshalling;
 using System.Text;
 using System.Threading.Tasks;
@@ -53,6 +54,36 @@ namespace LeetCode
                 }
             }
             
+        }
+        public static int TranslateToStr2(string str)
+        {
+            // 左神优化版
+            TranslateToStrRecur2(str, 0);
+            return result;
+        }
+        public static int TranslateToStrRecur2(string str, int i)
+        {
+            if (i == str.Length)
+                return 1;
+            if (str[i] == '0')                      // 左神的思想是到了为0的才“修剪”
+                return 0;
+
+            if (str[i] ==  '1')
+            {
+                int res = TranslateToStrRecur2(str, i + 1);
+                if (i + 1 < str.Length)
+                    res += TranslateToStrRecur2(str, i + 2);
+                return res;
+            }
+
+            if (str[i] == '2')
+            {
+                int res = TranslateToStrRecur2(str, i + 1);
+                if (i + 1 < str.Length && str[i + 1] > '1' && str[i + 1] < '6')
+                    res += TranslateToStrRecur2(str, i + 2);
+                return res;
+            }
+            return TranslateToStrRecur2(str, i + 1);
         }
         public static void ReverseStack(Stack<int> stack)
         {
