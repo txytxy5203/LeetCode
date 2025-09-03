@@ -11,7 +11,58 @@ namespace LeetCode
     public static class Recursion
     {
         static int result = 0;
+        public static int TotalNQueens(int n)
+        {
+            int[] records = new int[n];
+            return TotalNQueens(0, records);
+        }
+        public static int TotalNQueens(int i, int[] records)
+        {
+            if (i == records.Length)
+                return 1;
+            int res = 0;
+            for (int j = 0; j < records.Length; j++)
+            {
+                records[i] = j;
+                if(IsValid(records, i, j))
+                {
+                    res += TotalNQueens(i + 1, records);
+                }
+            }
+            return res;
+        }
+        static bool IsValid(int[] record, int i, int j)
+        {
+            for (int k = 0; k < i; k++)
+            {
+                if (record[k] == j)     // 不能共列
+                    return false;
+                if (Math.Abs(record[k] - j) == Math.Abs(k - i))     // 看斜率
+                    return false;               
+            }
+            return true;
+        }
+        public static int MaxValue(int[] weights, int[] values, int bags)
+        {
+            return MaxValueRecur(weights, values, 0, 0, bags);
+        }
+        public static int MaxValueRecur(int[] weights, int[] values, int i, int curr, int bags)
+        {
+            // 其实这个就是暴力递归    每一个要或者不要     不确定对不对
+            //if(curr > bags)
+            //    return 0;   
+            if(i == weights.Length)
+                return 0;
 
+            int v1 = 0;
+            int v2 = 0;
+            if(curr + weights[i] <= bags)           // 所以这里递归  要么先判断条件再递归  或者先递归再判断条件
+            {
+                v1 = MaxValueRecur(weights, values, i + 1, curr + weights[i], bags);
+            }
+            v2 = MaxValueRecur(weights, values, i + 1, curr, bags);
+            return Math.Max(v1, v2);
+        }
         public static int TranslateToStr(string str)
         {
             TranslateToStrRecur(str, 0, "");
@@ -65,7 +116,7 @@ namespace LeetCode
         {
             if (i == str.Length)
                 return 1;
-            if (str[i] == '0')                      // 左神的思想是到了为0的才“修剪”
+            if (str[i] == '0')                      // 左神的思想是到了为0的才“修剪”     这种思想要学习
                 return 0;
 
             if (str[i] ==  '1')
@@ -113,8 +164,7 @@ namespace LeetCode
             int first = FirstPredictTheWinner(nums, 0, nums.Length - 1);
             int second = SecondPredictTheWinner(nums, 0, nums.Length - 1);
             return first >= second;
-        }
-
+        }        
         public static int FirstPredictTheWinner(int[] arr, int L, int R)
         {
             if(L == R)

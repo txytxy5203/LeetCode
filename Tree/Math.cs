@@ -6,11 +6,12 @@ using System.Threading.Tasks;
 
 namespace LeetCode
 {
-    public static class Math
+    public static class Math_
     {
         public static int Reverse(int x)
         {
-
+            // https://leetcode.cn/problems/reverse-integer/description/
+            return 0;
         }
     }
 }

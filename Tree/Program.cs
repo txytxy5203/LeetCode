@@ -3,9 +3,15 @@ using System.Text;
 
 
 
-Console.WriteLine(String_.LongestPalindrome2("babad"));
+char[][] ints = { new char[] { '1', '1', '1', '1', '0' },
+                  new char[]{ '1', '1', '0', '1', '0' },
+                  new char[] { '1', '1', '0', '0', '0' },
+                  new char[]{ '0', '0', '0', '0', '0' }
+};
 
-
+#region Array
+Console.WriteLine(Array_.NumIslands(ints)); 
+#endregion
 #region ListNode
 ListNode AddTwoNumbers(ListNode l1, ListNode l2)
 {
