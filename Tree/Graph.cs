@@ -145,4 +145,73 @@ namespace LeetCode
             }
         }
     }
+
+    public class UnionFindSets<T>
+    {
+        class Element<T>
+        {
+            T value;
+            public Element(T value)
+            {
+                this.value = value;
+            }
+        }
+        Dictionary<T, Element<T>> elementMap;
+        Dictionary<Element<T>, Element<T>> fatherMap;
+        /// <summary>
+        /// key：每个集合的代表元素  value：该集合的大小
+        /// </summary>
+        Dictionary<Element<T>, int> sizeMap;
+        public UnionFindSets(List<T> list)
+        {
+            elementMap = new Dictionary<T, Element<T>>();
+            fatherMap = new Dictionary<Element<T>, Element<T>>();
+            sizeMap = new Dictionary<Element<T>, int>();
+            for (int i = 0; i < list.Count; i++)
+            {
+                Element<T> curr = new Element<T>(list[i]);
+                elementMap.Add(list[i], curr);
+                fatherMap.Add(curr, curr);
+                sizeMap.Add(curr, 1);
+            }
+        }
+        Element<T> FindHead(Element<T> element)
+        {
+            Element<T> curr = element;
+            Stack<Element<T>> stack = new Stack<Element<T>>();
+            while (curr != fatherMap[curr])
+            {
+                curr = fatherMap[curr];
+                stack.Push(curr);
+            }
+            while (stack.Count > 0)
+            {
+                fatherMap[stack.Pop()] = curr;
+            }
+            return curr;
+        }
+        public bool IsSameSet(T t1, T t2)
+        {
+            if(!elementMap.ContainsKey(t1) || !elementMap.ContainsKey(t2))
+                return false;
+            Element<T> head1 = elementMap[t1];
+            Element<T> head2 = elementMap[t2];
+            return FindHead(head1) == FindHead(head2);
+        }
+        public void Union(T t1, T t2)
+        {
+            if (!elementMap.ContainsKey(t1) || !elementMap.ContainsKey(t2))
+                return;
+            Element<T> e1 = FindHead(elementMap[t1]);
+            Element<T> e2 = FindHead(elementMap[t2]);
+            if(e1 != e2)
+            {
+                Element<T> big = sizeMap[e1] >= sizeMap[e2] ? e1 : e2;
+                Element<T> small = big == e1 ? e2 : e1;
+                fatherMap[small] = big;
+                sizeMap[big] += sizeMap[small];
+                sizeMap.Remove(small);
+            }
+        }
+    }
 }
