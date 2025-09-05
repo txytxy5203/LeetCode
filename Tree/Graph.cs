@@ -145,7 +145,10 @@ namespace LeetCode
             }
         }
     }
-
+    /// <summary>
+    /// 并查集
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public class UnionFindSets<T>
     {
         class Element<T>

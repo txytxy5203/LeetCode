@@ -1,14 +1,70 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text;
 
 namespace LeetCode
 {
     public static class String_
     {
+        public static void Manacher()
+        {
+            // 马拉车算法
+
+        }
+        public static int KMP(string s, string m)
+        {
+            // 再好好体会一下KMP算法的过程
+            if (s == null || s.Length == 0 || m == null || m.Length == 0)
+                return -1;
+            int[] next = GetNextArray(m);
+            int i1 = 0;
+            int i2 = 0;
+            while (i1 < s.Length && i2 < m.Length)
+            {
+                if (s[i1] == m[i2])         // 对应位置上的字符相等 ++
+                {
+                    i1++;
+                    i2++;
+                }
+                else if (i2 == 0)           // i2回到了0位置
+                {
+                    i1++;
+                }
+                else
+                {
+                    i2 = next[i2];
+                }
+            }
+            return i2 == m.Length ? i1 - i2 : -1;
+        }
+        static int[] GetNextArray(string m)
+        {
+            if (m.Length == 1)
+                return new int[] { -1};
+            int[] next = new int[m.Length];
+            next[0] = -1;
+            next[1] = 0;
+            int i = 2;
+            int cn = 0;
+            while (i < m.Length)
+            {
+                if (m[i - 1] == m[cn])
+                {
+                    cn++;
+                    next[i] = cn;
+                    i++;
+                }
+                else if(cn > 0)
+                {
+                    cn = next[cn];
+                }
+                else
+                {
+                    next[i] = 0;
+                    i++;
+                }
+            }
+            return next;
+        }
+
         public static string LongestPalindrome(string s)
         {
             // https://leetcode.cn/problems/longest-palindromic-substring/description/
@@ -58,25 +114,25 @@ namespace LeetCode
             {
                 left = i - 1;
                 right = i + 1;
-                while(left >= 0 && s[left] == s[i])
+                while (left >= 0 && s[left] == s[i])
                 {
-                    left --;
+                    left--;
                     len++;
                 }
-                while(right < s.Length && s[right] == s[i])
+                while (right < s.Length && s[right] == s[i])
                 {
-                    right ++; 
+                    right++;
                     len++;
                 }
-                while(left >= 0 && right < s.Length && s[left] == s[right])
+                while (left >= 0 && right < s.Length && s[left] == s[right])
                 {
                     len += 2;
-                    left --;
-                    right ++;
+                    left--;
+                    right++;
                 }
                 if (len > maxLen)
                 {
-                    maxLen = len; 
+                    maxLen = len;
                     maxStart = left;
                 }
                 len = 1;
@@ -110,16 +166,16 @@ namespace LeetCode
                         else
                         {
                             record.Add(c);
-                            if(record.Count == chars.Length)
+                            if (record.Count == chars.Length)
                                 isBreak = true;
                         }
                     }
-                    if(isBreak)
+                    if (isBreak)
                         break;
                 }
 
                 // 扫了一遍都没有就退出了
-                if(index + i - 1 == s.Length)
+                if (index + i - 1 == s.Length)
                     break;
             }
             return i - 1;
@@ -132,7 +188,7 @@ namespace LeetCode
             int left = 0;
             int max = 0;
             Dictionary<char, int> record = new Dictionary<char, int>();
-            for (int i = 0; i < s.Length; i++) 
+            for (int i = 0; i < s.Length; i++)
             {
                 if (record.ContainsKey(s[i]))
                     left = Math.Max(left, record[s[i]] + 1);

@@ -3,15 +3,10 @@ using System.Text;
 
 
 
-char[][] ints = { new char[] { '1', '1', '1', '1', '0' },
-                  new char[]{ '1', '1', '0', '1', '0' },
-                  new char[] { '1', '1', '0', '0', '0' },
-                  new char[]{ '0', '0', '0', '0', '0' }
-};
 
-#region Array
-Console.WriteLine(Array_.NumIslands(ints)); 
-#endregion
+string w = "ABCDABD";
+string s = "ABC ABCDAB ABCDABCDABDE";
+
 #region ListNode
 ListNode AddTwoNumbers(ListNode l1, ListNode l2)
 {
