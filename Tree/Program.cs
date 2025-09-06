@@ -3,9 +3,8 @@ using System.Text;
 
 
 
+Console.WriteLine(Math_.Reverse(1534236469));
 
-string w = "ABCDABD";
-string s = "ABC ABCDAB ABCDABCDABDE";
 
 #region ListNode
 ListNode AddTwoNumbers(ListNode l1, ListNode l2)

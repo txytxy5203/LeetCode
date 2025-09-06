@@ -4,14 +4,132 @@ namespace LeetCode
 {
     public static class String_
     {
-        public static void Manacher()
+        public static int MyAtoi(string s)
         {
-            // 马拉车算法
+            if (s == null || s.Length == 0)
+                return 0;
+            bool isStart = false;
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < s.Length; i++)
+            {
+                if (!isStart && s[i] == ' ')
+                    continue;
+                if (isStart)
+                {
+                    if (s[i] >= '0' && s[i] <= '9' || s[i] == '.')
+                    {
+                        sb.Append(s[i]);
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+                else
+                {
+                    if (s[i] == '-')
+                    { 
+                        sb.Append(s[i]);
+                    }
+                    else if (s[i] == '+')
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+            return int.Parse(sb.ToString());
+        }
+        public static string Convert(string s, int numRows)
+        {
+            // https://leetcode.cn/problems/zigzag-conversion/description/
 
+            if (numRows == 1)
+                return s;
+
+            // 先确定二维数组的大小
+            char[,] chars;
+            int oneGroup = 2 * (numRows - 1);                   // 每一组的数量
+            int x = s.Length / oneGroup * (numRows - 1);
+            int y = s.Length % oneGroup;
+            if (y < numRows)
+            {
+                chars = new char[numRows, x + 1];
+            }
+            else
+            {
+                chars = new char[numRows, x + y - numRows + 2];
+            }
+
+            // 向数组填值            就是确定在二维数组中的位置  细心一点就行了
+            for (int i = 0; i < s.Length; i++)
+            {
+                int col;
+                int row;
+
+                int groupIndex = i % oneGroup;            // 在当前组所处的位置
+                if (groupIndex < numRows)
+                {
+                    col = i / oneGroup * (numRows - 1);
+                    row = groupIndex;
+                }
+                else
+                {
+                    col = i / oneGroup * (numRows - 1) + groupIndex - numRows + 1;
+                    row = oneGroup - groupIndex;
+                }
+                chars[row, col] = s[i];
+            }
+
+            // 拼接
+            StringBuilder sb = new StringBuilder();
+            foreach (char c in chars)
+            {
+                if (c == '\0')
+                    continue;
+                sb.Append(c);
+            }
+            return sb.ToString();
+        }
+        public static string Convert2(string s, int numRows)
+        {
+            // https://leetcode.cn/problems/zigzag-conversion/solutions/21610/zzi-xing-bian-huan-by-jyd/
+            // 6666666666
+            if (numRows == 1)
+                return s;
+            List<StringBuilder> list = new List<StringBuilder>();
+            StringBuilder result = new StringBuilder();
+            for (int i = 0; i < numRows; i++)
+            {
+                list.Add(new StringBuilder());
+            }
+
+            int index = 0;
+            bool flag = false;
+            for (int i = 0; i < s.Length; i++)
+            {
+
+                list[index].Append(s[i]);
+                if ((i % (numRows - 1) == 0))
+                    flag = !flag;
+                if (flag)
+                    index++;
+                else
+                    index--;
+            }
+            foreach (var sb in list)
+            {
+                result.Append(sb);
+            }
+            return result.ToString();
         }
         public static int KMP(string s, string m)
         {
             // 再好好体会一下KMP算法的过程
+            // O(n)
             if (s == null || s.Length == 0 || m == null || m.Length == 0)
                 return -1;
             int[] next = GetNextArray(m);
@@ -38,7 +156,7 @@ namespace LeetCode
         static int[] GetNextArray(string m)
         {
             if (m.Length == 1)
-                return new int[] { -1};
+                return new int[] { -1 };
             int[] next = new int[m.Length];
             next[0] = -1;
             next[1] = 0;
@@ -52,7 +170,7 @@ namespace LeetCode
                     next[i] = cn;
                     i++;
                 }
-                else if(cn > 0)
+                else if (cn > 0)
                 {
                     cn = next[cn];
                 }
@@ -140,6 +258,37 @@ namespace LeetCode
             }
             return s.Substring(maxStart, len);
         }
+        public static int LongestPalindrome3(string s)
+        {
+            // 马拉车算法  Manacher
+            if (s == null || s.Length == 0)
+                return 0;
+            string str = "#" + string.Join("#", "abc".ToCharArray()) + "#";         // 把s处理成中间加上#的字符串
+            int[] pArr = new int[s.Length];         // 回文半径数组
+            int c = -1;         // 中心
+            int r = -1;         // 回文右边界的再往右一个位置   最右的有效区是R-1位置
+            int max = int.MinValue;
+            for (int i = 0; i != str.Length; i++)
+            {
+                // i至少的回文区域  先给pArr[i]
+                pArr[i] = r > i ? Math.Min(pArr[2 * c - i], r - i) : 1;
+                while (i + pArr[i] < str.Length && i - pArr[i] > -1)
+                {
+                    if (str[i + pArr[i]] == str[i - pArr[i]])
+                        pArr[i]++;
+                    else
+                        break;
+                }
+                if (i + pArr[i] > r)
+                {
+                    r = i + pArr[i];
+                    c = i;
+                }
+                max = Math.Max(max, pArr[i]);
+            }
+            return max - 1;
+
+        }
         public static int LengthOfLongestSubstring(string s)
         {
             // https://leetcode.cn/problems/longest-substring-without-repeating-characters/description/
@@ -197,5 +346,6 @@ namespace LeetCode
             }
             return max;
         }
+
     }
 }
