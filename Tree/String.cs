@@ -6,42 +6,53 @@ namespace LeetCode
     {
         public static int MyAtoi(string s)
         {
-            if (s == null || s.Length == 0)
-                return 0;
-            bool isStart = false;
-            StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < s.Length; i++)
+            // https://leetcode.cn/problems/string-to-integer-atoi/description/
+            int len = s.Length;
+            int index = 0;
+            // 1 去除 ' '
+            while (index < len && s[index] == ' ')
             {
-                if (!isStart && s[i] == ' ')
-                    continue;
-                if (isStart)
-                {
-                    if (s[i] >= '0' && s[i] <= '9' || s[i] == '.')
-                    {
-                        sb.Append(s[i]);
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
-                else
-                {
-                    if (s[i] == '-')
-                    { 
-                        sb.Append(s[i]);
-                    }
-                    else if (s[i] == '+')
-                    {
-                        continue;
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
+                index++;
             }
-            return int.Parse(sb.ToString());
+
+            // 2 index == len ?
+            if (index == len)
+                return 0;
+
+            // 3 
+            int sign = 1;
+            if (s[index] == '-')
+            {
+                index++;
+                sign = -1;
+            }
+            else if (s[index] == '+')
+            {
+                index++;
+            }
+
+            // 4 
+            int res = 0;
+            while(index < len)
+            {
+                char curr = s[index];
+                if (s[index] < '0' || s[index] > '9')
+                    break;
+
+                // 题目中说：环境只能存储 32 位大小的有符号整数，因此，需要提前判断乘以 10 以后是否越界
+                if (res > int.MaxValue / 10 || (res == int.MaxValue / 10 && (curr - '0') > int.MaxValue % 10))
+                {
+                    return int.MaxValue;
+                }
+                if (res < int.MinValue / 10 || (res == int.MinValue / 10 && (curr - '0') > -(int.MinValue % 10)))
+                {
+                    return int.MinValue;
+                }
+                res = res * 10 + sign * (curr - '0');
+                index++;
+            }
+            return res;
+            
         }
         public static string Convert(string s, int numRows)
         {
@@ -182,7 +193,6 @@ namespace LeetCode
             }
             return next;
         }
-
         public static string LongestPalindrome(string s)
         {
             // https://leetcode.cn/problems/longest-palindromic-substring/description/
@@ -258,35 +268,140 @@ namespace LeetCode
             }
             return s.Substring(maxStart, len);
         }
-        public static int LongestPalindrome3(string s)
+        public static String LongestPalindrome3(string s)
         {
             // 马拉车算法  Manacher
-            if (s == null || s.Length == 0)
-                return 0;
-            string str = "#" + string.Join("#", "abc".ToCharArray()) + "#";         // 把s处理成中间加上#的字符串
-            int[] pArr = new int[s.Length];         // 回文半径数组
-            int c = -1;         // 中心
-            int r = -1;         // 回文右边界的再往右一个位置   最右的有效区是R-1位置
-            int max = int.MinValue;
-            for (int i = 0; i != str.Length; i++)
+            #region 左神的写法
+            //if (s == null || s.Length == 0)
+            //    return 0;
+            //string str = "#" + string.Join("#", "abc".ToCharArray()) + "#";         // 把s处理成中间加上#的字符串
+            //int[] pArr = new int[s.Length];         // 回文半径数组
+            //int c = -1;         // 中心
+            //int r = -1;         // 回文右边界的再往右一个位置   最右的有效区是R-1位置
+            //int max = int.MinValue;
+            //for (int i = 0; i != str.Length; i++)
+            //{
+            //    // i至少的回文区域  先给pArr[i]
+            //    pArr[i] = r > i ? Math.Min(pArr[2 * c - i], r - i) : 1;
+            //    while (i + pArr[i] < str.Length && i - pArr[i] > -1)
+            //    {
+            //        if (str[i + pArr[i]] == str[i - pArr[i]])
+            //            pArr[i]++;
+            //        else
+            //            break;
+            //    }
+            //    if (i + pArr[i] > r)
+            //    {
+            //        r = i + pArr[i];
+            //        c = i;
+            //    }
+            //    max = Math.Max(max, pArr[i]);
+            //}
+            //return max - 1;
+            #endregion
+
+            #region 自己写的
+            //if (s == null || s.Length == 0)
+            //    return "";
+            //string str = "#" + string.Join("#", s.ToCharArray()) + "#";         // 把s处理成中间加上#的字符串
+            //int[] pArr = new int[str.Length];         // 回文半径数组       "aba" 回文半径为1  我这里和左神的定义有点区别
+            //int c = -1;         // 中心
+            //int r = -1;         // 回文最大右边界
+            //string max = "";
+
+            //for (int i = 0; i < str.Length; i++)
+            //{
+            //    if(i >= r)
+            //    {
+            //        int index = 1;
+            //        while (i - index >=0 && i + index < str.Length && str[i - index] == str[i + index])     // 向外扩展
+            //        {
+            //            index++;
+            //        }
+            //        pArr[i] = index - 1;
+            //        if(r < i + index - 1)   // 更新右边界
+            //        {
+            //            r = i + index - 1;                       
+            //            c = i;
+            //        }
+            //        max = 2 * index - 1 > max.Length ? str.Substring(i  - index + 1, 2 * index - 1) : max;
+            //    }
+            //    else
+            //    {
+            //        if (pArr[2 * c - i] < r - i)
+            //        {
+            //            pArr[i] = pArr[2 * c - i];
+            //        }
+            //        else if(pArr[2 * c - i] > r - i)
+            //        {
+            //            pArr[i] = r - i;
+            //        }
+            //        else
+            //        {
+            //            int index = r - i;          // 这里可以直接从r开始扩展
+            //            while (i - index >= 0 && i + index < str.Length && str[i - index] == str[i + index])     // 向外扩展
+            //            {
+            //                index++;
+            //            }
+            //            pArr[i] = index - 1;
+            //            if (r < i + index - 1)   // 更新右边界
+            //            {
+            //                r = i + index - 1;
+            //                c = i;
+            //            }
+            //            max = 2 * index - 1 > max.Length ? str.Substring(i - index + 1, 2 * index - 1) : max;
+            //        }
+            //    }
+            //}
+            //return max.Replace("#", "");
+            #endregion
+
+
+            #region AI优化的
+            if (string.IsNullOrEmpty(s))
+                return "";
+
+            // 预处理字符串，插入特殊字符
+            string str = "#" + string.Join("#", s.ToCharArray()) + "#";
+            int[] pArr = new int[str.Length];
+            int c = -1; // 中心
+            int r = -1; // 回文最大右边界
+            int maxLen = 0;
+            int centerIndex = -1;
+
+            for (int i = 0; i < str.Length; i++)
             {
-                // i至少的回文区域  先给pArr[i]
-                pArr[i] = r > i ? Math.Min(pArr[2 * c - i], r - i) : 1;
-                while (i + pArr[i] < str.Length && i - pArr[i] > -1)
+                int mirror = 2 * c - i; // 镜像位置
+                if (i < r)
                 {
-                    if (str[i + pArr[i]] == str[i - pArr[i]])
-                        pArr[i]++;
-                    else
-                        break;
+                    pArr[i] = Math.Min(r - i, pArr[mirror]);
                 }
+
+                // 尝试扩展回文       统一往外扩展   省去了if else的逻辑
+                while (i + (pArr[i] + 1) < str.Length && i - (pArr[i] + 1) >= 0 && str[i + (pArr[i] + 1)] == str[i - (pArr[i] + 1)])
+                {
+                    pArr[i]++;
+                }
+
+                // 更新中心和右边界
                 if (i + pArr[i] > r)
                 {
-                    r = i + pArr[i];
                     c = i;
+                    r = i + pArr[i];
                 }
-                max = Math.Max(max, pArr[i]);
+
+                // 更新最长回文子串
+                if (pArr[i] > maxLen)
+                {
+                    maxLen = pArr[i];
+                    centerIndex = i;
+                }
             }
-            return max - 1;
+
+            // 提取最长回文子串
+            int start = (centerIndex - maxLen) / 2;
+            return s.Substring(start, maxLen);
+            #endregion
 
         }
         public static int LengthOfLongestSubstring(string s)

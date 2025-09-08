@@ -3,7 +3,7 @@ using System.Text;
 
 
 
-Console.WriteLine(Math_.Reverse(1534236469));
+Console.WriteLine(String_.LongestPalindrome3("babab"));
 
 
 #region ListNode
