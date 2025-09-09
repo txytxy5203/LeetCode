@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,6 +9,82 @@ namespace LeetCode
 {
     public static class Array_
     {
+        public static int[] MaxSlidingWindow(int[] nums, int k)
+        {
+            // https://leetcode.cn/problems/sliding-window-maximum/
+            // 滑动窗口
+            if (nums.Length == 0 || k == 0 || k > nums.Length)
+                return null;
+            int l = 0;
+            int r = 0;
+            int[] result = new int[nums.Length - k + 1];
+            int index = 0;
+            LinkedList<int> list = new LinkedList<int>();       // 这里用链表实现双端队列
+            
+            for (; r < k; r++)
+            {
+                while (list.Count > 0 && nums[list.Last.Value] <= nums[r])      // 严格保持队列中的  大 -> 小
+                {
+                    list.RemoveLast();
+                }
+                list.AddLast(r);
+            }
+            result[index] = nums[list.First.Value];
+
+
+            while (r < nums.Length)
+            {               
+                while (list.Count > 0 && nums[list.Last.Value] <= nums[r])      // 严格保持队列中的  大 -> 小
+                {
+                    list.RemoveLast();
+                }
+                list.AddLast(r);
+
+                if(list.First.Value == l)
+                    list.RemoveFirst();
+                l++;
+
+                index++;
+                result[index] = nums[list.First.Value];
+                r++;
+            }
+            return result;
+
+            #region AI优化
+            //if (nums.Length == 0 || k == 0)
+            //    return new int[0];
+
+            //int n = nums.Length;
+            //int[] result = new int[n - k + 1];
+            //LinkedList<int> deque = new LinkedList<int>();
+
+            //for (int i = 0; i < n; i++)
+            //{
+            //    // 移除队列中所有小于当前元素的索引
+            //    while (deque.Count > 0 && nums[deque.Last.Value] <= nums[i])
+            //    {
+            //        deque.RemoveLast();
+            //    }
+
+            //    // 添加当前元素的索引到队列
+            //    deque.AddLast(i);
+
+            //    // 移除队列中不在窗口范围内的索引
+            //    if (deque.First.Value <= i - k)
+            //    {
+            //        deque.RemoveFirst();
+            //    }
+
+            //    // 当窗口大小达到 k 时，记录当前窗口的最大值
+            //    if (i >= k - 1)
+            //    {
+            //        result[i - k + 1] = nums[deque.First.Value];
+            //    }
+            //}
+
+            //return result;
+            #endregion
+        }
         public static int NumIslands(char[][] grid)
         {
             // https://leetcode.cn/problems/number-of-islands/description/

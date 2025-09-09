@@ -2,8 +2,12 @@
 using System.Text;
 
 
-
-Console.WriteLine(String_.LongestPalindrome3("babab"));
+int[] a = { 1, 3, -1, -3, 5, 3, 6, 7 };
+int[] ints = Array_.MaxSlidingWindow(a, 3);
+foreach (int i in ints)
+{
+    Console.WriteLine(i);
+}
 
 
 #region ListNode
