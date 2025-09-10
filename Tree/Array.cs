@@ -47,112 +47,50 @@ namespace LeetCode
         public static int MaxSumMinProduct(int[] nums)
         {
             // https://leetcode.cn/problems/maximum-subarray-min-product/description/
-            // 先用单调栈
-            Stack<LinkedList<int>> stack = new Stack<LinkedList<int>>();        // 一定要记住加入的是下标
+            // AI 写的代码好好看一下 优雅
+            int n = nums.Length;
+            ulong[] prefixSum = new ulong[n + 1];
+            Stack<int> stack = new Stack<int>();
             Dictionary<int, (int left, int right)> dict = new Dictionary<int, (int left, int right)>();
-            for (int i = 0; i < nums.Length; i++)
+
+            // 计算前缀和
+            for (int i = 0; i < n; i++)
             {
-                if(stack.Count > 0)
-                {
-                    if (nums[stack.Peek().Last.Value] < nums[i])
-                    {
-                        var curr = new LinkedList<int>();
-                        curr.AddLast(i);
-                        stack.Push(curr);
-                        continue;
-                    }
-                    else if(nums[stack.Peek().Last.Value] == nums[i])
-                    {
-                        stack.Peek().AddLast(i);
-                        continue;
-                    }
-
-                    while (stack.Count != 0)
-                    {
-                        if (nums[stack.Peek().Last.Value] < nums[i])
-                        {
-                            var curr = new LinkedList<int>();
-                            curr.AddLast(i);
-                            stack.Push(curr);
-                            break;
-
-                        }
-                        else if (nums[stack.Peek().Last.Value] == nums[i])
-                        {
-                            stack.Peek().AddLast(i);
-                            break;
-                        }
-                        else
-                        {
-                            var pop = stack.Pop();
-                            if (stack.Count == 0)
-                            {
-                                foreach (var item in pop)
-                                {
-                                    dict.Add(item, (-1, i));
-                                }
-                            }
-                            else
-                            {
-                                foreach (var item in pop)
-                                {
-                                    dict.Add(item, (stack.Peek().Last.Value, i));
-                                }
-                            }
-                            if(stack.Count == 0)
-                            {
-                                var curr = new LinkedList<int>();
-                                curr.AddLast(i);
-                                stack.Push(curr);
-                                break;
-                            }
-                        }                       
-                    }                                      
-                }
-                else
-                {
-                    var curr = new LinkedList<int>();
-                    curr.AddLast(i);
-                    stack.Push(curr);
-                }
+                prefixSum[i + 1] = prefixSum[i] + (ulong)nums[i];
             }
 
-            while(stack.Count != 0)
+            // 使用单调栈处理左右边界
+            for (int i = 0; i < n; i++)
             {
-                var pop = stack.Pop();
-                if (stack.Count == 0)
+                while (stack.Count > 0 && nums[stack.Peek()] >= nums[i])
                 {
-                    foreach (var item in pop)
-                    {
-                        dict.Add(item, (-1, -1));
-                    }
+                    int top = stack.Pop();
+                    int left = stack.Count > 0 ? stack.Peek() : -1;
+                    dict[top] = (left, i);
                 }
-                else
-                {
-                    foreach (var item in pop)
-                    {
-                        dict.Add(item, (stack.Peek().Last.Value, -1));
-                    }
-                }
+                stack.Push(i);
             }
 
-
-            ulong max = 0;
-            // 开始计算和乘
-            for (int i = 0; i < nums.Length; i++)
+            // 处理栈中剩余的元素
+            while (stack.Count > 0)
             {
-                (int left, int right) = dict[i];
-                right = right == -1 ? nums.Length : right;
-                ulong sum = 0;
-                for (int j = left + 1; j < right; j++)
-                {
-                    sum += (ulong)nums[j];
-                }
-                ulong mul = sum * (ulong)nums[i];
-                max = max > mul ? max : mul;
+                int top = stack.Pop();
+                int left = stack.Count > 0 ? stack.Peek() : -1;
+                dict[top] = (left, n);
             }
-            return (int) (max % (Math.Pow(10, 9) + 7));
-        }
+
+            // 计算最大乘积
+            ulong maxProduct = 0;
+            foreach (var pair in dict)
+            {
+                int index = pair.Key;
+                (int left, int right) = pair.Value;
+                ulong sum = prefixSum[right] - prefixSum[left + 1];
+                ulong product = sum * (ulong)nums[index];
+                maxProduct = Math.Max(maxProduct, product);
+            }
+            return (int)(maxProduct % (1000000000 + 7));
+        }      
         public static int[] MaxSlidingWindow(int[] nums, int k)
         {
             // https://leetcode.cn/problems/sliding-window-maximum/
