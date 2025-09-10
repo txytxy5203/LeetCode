@@ -9,6 +9,150 @@ namespace LeetCode
 {
     public static class Array_
     {
+        public static int[] NextGreaterElement(int[] nums1, int[] nums2)
+        {
+            // https://leetcode.cn/problems/next-greater-element-i/description/
+            Stack<int> stack = new Stack<int>();
+            Dictionary<int, int> dict = new Dictionary<int, int>();
+            Dictionary<int, int> valueIndex = new Dictionary<int, int>();
+
+            // 遍历 nums2，构建单调栈
+            for (int i = 0; i < nums2.Length; i++)
+            {
+                valueIndex[nums2[i]] = i;
+                // 当前元素大于栈顶元素时，弹出栈顶元素并更新字典
+                while (stack.Count > 0 && nums2[stack.Peek()] < nums2[i])
+                {
+                    int pop = stack.Pop();
+                    dict[pop] = nums2[i];
+                }
+                // 当前元素入栈
+                stack.Push(i);
+            }
+
+            // 栈中剩余的元素没有下一个更大元素，设置为 -1
+            while (stack.Count > 0)
+            {
+                int pop = stack.Pop();
+                dict[pop] = -1;
+            }
+
+            int[] result = new int[nums1.Length];
+            for (int i = 0;i < nums1.Length;i++)
+            {
+                result[i] = dict[valueIndex[nums1[i]]];
+            }
+            return result;
+        }
+        public static int MaxSumMinProduct(int[] nums)
+        {
+            // https://leetcode.cn/problems/maximum-subarray-min-product/description/
+            // 先用单调栈
+            Stack<LinkedList<int>> stack = new Stack<LinkedList<int>>();        // 一定要记住加入的是下标
+            Dictionary<int, (int left, int right)> dict = new Dictionary<int, (int left, int right)>();
+            for (int i = 0; i < nums.Length; i++)
+            {
+                if(stack.Count > 0)
+                {
+                    if (nums[stack.Peek().Last.Value] < nums[i])
+                    {
+                        var curr = new LinkedList<int>();
+                        curr.AddLast(i);
+                        stack.Push(curr);
+                        continue;
+                    }
+                    else if(nums[stack.Peek().Last.Value] == nums[i])
+                    {
+                        stack.Peek().AddLast(i);
+                        continue;
+                    }
+
+                    while (stack.Count != 0)
+                    {
+                        if (nums[stack.Peek().Last.Value] < nums[i])
+                        {
+                            var curr = new LinkedList<int>();
+                            curr.AddLast(i);
+                            stack.Push(curr);
+                            break;
+
+                        }
+                        else if (nums[stack.Peek().Last.Value] == nums[i])
+                        {
+                            stack.Peek().AddLast(i);
+                            break;
+                        }
+                        else
+                        {
+                            var pop = stack.Pop();
+                            if (stack.Count == 0)
+                            {
+                                foreach (var item in pop)
+                                {
+                                    dict.Add(item, (-1, i));
+                                }
+                            }
+                            else
+                            {
+                                foreach (var item in pop)
+                                {
+                                    dict.Add(item, (stack.Peek().Last.Value, i));
+                                }
+                            }
+                            if(stack.Count == 0)
+                            {
+                                var curr = new LinkedList<int>();
+                                curr.AddLast(i);
+                                stack.Push(curr);
+                                break;
+                            }
+                        }                       
+                    }                                      
+                }
+                else
+                {
+                    var curr = new LinkedList<int>();
+                    curr.AddLast(i);
+                    stack.Push(curr);
+                }
+            }
+
+            while(stack.Count != 0)
+            {
+                var pop = stack.Pop();
+                if (stack.Count == 0)
+                {
+                    foreach (var item in pop)
+                    {
+                        dict.Add(item, (-1, -1));
+                    }
+                }
+                else
+                {
+                    foreach (var item in pop)
+                    {
+                        dict.Add(item, (stack.Peek().Last.Value, -1));
+                    }
+                }
+            }
+
+
+            ulong max = 0;
+            // 开始计算和乘
+            for (int i = 0; i < nums.Length; i++)
+            {
+                (int left, int right) = dict[i];
+                right = right == -1 ? nums.Length : right;
+                ulong sum = 0;
+                for (int j = left + 1; j < right; j++)
+                {
+                    sum += (ulong)nums[j];
+                }
+                ulong mul = sum * (ulong)nums[i];
+                max = max > mul ? max : mul;
+            }
+            return (int) (max % (Math.Pow(10, 9) + 7));
+        }
         public static int[] MaxSlidingWindow(int[] nums, int k)
         {
             // https://leetcode.cn/problems/sliding-window-maximum/
