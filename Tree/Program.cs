@@ -2,12 +2,18 @@
 using System.Text;
 
 
-int[] nums1 = { 4,1,2 };
-int[] nums2 = { 1,3,4,2 };
-int[] ints = Array_.NextGreaterElement(nums1, nums2);
-foreach (int i in ints)
-    Console.WriteLine(i);
+TreeNode a1 = new TreeNode(1);
+TreeNode a2 = new TreeNode(2);
+TreeNode a3 = new TreeNode(3);
+TreeNode a4 = new TreeNode(4);
+TreeNode a5 = new TreeNode(5);
 
+a1.left = a2;a1.right = a3;
+a2.left = a4;a2.right = a5;
+a3.left = null; a3.right = null;
+a4.left = null; a4.right = null;
+a5.left = null; a5.right = null;
+Console.WriteLine(DiameterOfBinaryTree(a1));
 
 
 #region ListNode
@@ -572,5 +578,26 @@ static void DFS(Node node)
             }
         }
     }
+}
+#endregion
+#region Tree
+static int DiameterOfBinaryTree(TreeNode root)
+{
+    // https://leetcode.cn/problems/diameter-of-binary-tree/description/
+    if (root == null)
+        return 0;
+    // 根据头节点是否参与来分类
+    int leftMax = DiameterOfBinaryTree(root.left);
+    int rightMax = DiameterOfBinaryTree(root.right);
+    int mid = DiameterOfBinaryTreeRecur(root.left) + DiameterOfBinaryTreeRecur(root.right);
+    return Math.Max(Math.Max(leftMax, rightMax), mid);
+}
+static int DiameterOfBinaryTreeRecur(TreeNode node)
+{
+    if (node == null)
+        return 0;
+    int left = DiameterOfBinaryTreeRecur(node.left);
+    int right = DiameterOfBinaryTreeRecur(node.right);
+    return Math.Max(left, right) + 1;
 }
 #endregion
