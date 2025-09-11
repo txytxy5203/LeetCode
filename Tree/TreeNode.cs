@@ -18,4 +18,14 @@ namespace LeetCode
             this.right = right;
         }
     }
+    public class NTreeNode
+    {
+        public int val;
+        public List<NTreeNode> childs;
+        public NTreeNode(int val = 0)
+        {
+            this.val = val;
+            childs = new List<NTreeNode>();
+        }
+    }
 }

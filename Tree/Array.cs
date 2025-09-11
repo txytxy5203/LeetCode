@@ -9,6 +9,19 @@ namespace LeetCode
 {
     public static class Array_
     {
+        public static int MaxArea(int[] height)
+        {
+            // https://leetcode.cn/problems/container-with-most-water/description/
+            int max = 0;
+            for (int i = 0; i < height.Length; i++)
+            {
+                for(int j = i + 1; j < height.Length; j++)
+                {
+                    max = Math.Max(max, (j - i) * Math.Min(height[i], height[j]));
+                }
+            }
+            return max;
+        }
         public static int[] NextGreaterElement(int[] nums1, int[] nums2)
         {
             // https://leetcode.cn/problems/next-greater-element-i/description/

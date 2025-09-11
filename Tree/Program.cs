@@ -2,18 +2,21 @@
 using System.Text;
 
 
-TreeNode a1 = new TreeNode(1);
-TreeNode a2 = new TreeNode(2);
-TreeNode a3 = new TreeNode(3);
-TreeNode a4 = new TreeNode(4);
-TreeNode a5 = new TreeNode(5);
+NTreeNode a1 = new NTreeNode(70);
+NTreeNode a2 = new NTreeNode(3);
+NTreeNode a3 = new NTreeNode(4);
+NTreeNode a4 = new NTreeNode(5);
+NTreeNode a5 = new NTreeNode(100);
+NTreeNode a6 = new NTreeNode(200);
+NTreeNode a7 = new NTreeNode(300);
 
-a1.left = a2;a1.right = a3;
-a2.left = a4;a2.right = a5;
-a3.left = null; a3.right = null;
-a4.left = null; a4.right = null;
-a5.left = null; a5.right = null;
-Console.WriteLine(DiameterOfBinaryTree(a1));
+a1.childs.Add(a2);
+a1.childs.Add(a3);
+a1.childs.Add(a4);
+a2.childs.Add(a5);
+a3.childs.Add(a6);
+a4.childs.Add(a7);
+Console.WriteLine(MaxHappyValue(a1));
 
 
 #region ListNode
@@ -581,9 +584,35 @@ static void DFS(Node node)
 }
 #endregion
 #region Tree
+int MaxHappyValue(NTreeNode root)
+{
+    // 派对快乐最大值
+    // 还是没有搞懂这个递归原理
+    if (root == null)
+        return 0;
+    (int lai, int bu) = MaxHappyValueRecur(root);
+    return Math.Max(lai, bu);
+}
+(int lai, int bu) MaxHappyValueRecur(NTreeNode node)
+{
+    if (node.childs == null)
+        return (node.val,0);
+
+    int attend = node.val;
+    int notAttend = 0;
+    
+    for (int i = 0; i < node.childs.Count; i++)
+    {
+        (int a, int n) = MaxHappyValueRecur(node.childs[i]);
+        attend += a;
+        notAttend += Math.Max(a, n);
+    }
+    return (attend, notAttend);
+}
 static int DiameterOfBinaryTree(TreeNode root)
 {
     // https://leetcode.cn/problems/diameter-of-binary-tree/description/
+    // 这个是自己写的
     if (root == null)
         return 0;
     // 根据头节点是否参与来分类
@@ -599,5 +628,22 @@ static int DiameterOfBinaryTreeRecur(TreeNode node)
     int left = DiameterOfBinaryTreeRecur(node.left);
     int right = DiameterOfBinaryTreeRecur(node.right);
     return Math.Max(left, right) + 1;
+}
+static int DiameterOfBinaryTree2(TreeNode root)
+{
+    if(root == null)
+        return 0;
+    int maxDis = 0;
+    DiameterOfBinaryTreeRecur2(root, ref maxDis);       // 这里可以使用ref来避免使用类中的字段 来实现全局修改            
+    return maxDis;
+}
+static int DiameterOfBinaryTreeRecur2(TreeNode node, ref int maxDis)
+{
+    if(node == null)
+        return 0;
+    int left = DiameterOfBinaryTreeRecur2(node.left, ref maxDis);
+    int right = DiameterOfBinaryTreeRecur2(node.right, ref maxDis);
+    maxDis = Math.Max(maxDis, left + right);
+    return Math.Max(left, right) + 1;           // 这里返回的是深度
 }
 #endregion
