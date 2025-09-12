@@ -9,18 +9,43 @@ namespace LeetCode
 {
     public static class Array_
     {
+        public static string IntToRoman(int num)
+        {
+            return "";
+        }
         public static int MaxArea(int[] height)
         {
             // https://leetcode.cn/problems/container-with-most-water/description/
+            #region 暴力解法无法AC
+            //int max = 0;
+            //for (int i = 0; i < height.Length; i++)
+            //{
+            //    for (int j = i + 1; j < height.Length; j++)
+            //    {
+            //        max = Math.Max(max, (j - i) * Math.Min(height[i], height[j]));
+            //    }
+            //}
+            //return max;
+            #endregion
+            #region 双指针
+            int i = 0;
+            int j = height.Length - 1;
             int max = 0;
-            for (int i = 0; i < height.Length; i++)
+            while(i != j)
             {
-                for(int j = i + 1; j < height.Length; j++)
+                int small = height[i] <= height[j] ? i : j;     // 短板 
+                max = Math.Max(max, (j - i) * height[small]);
+                if (height[i] <= height[j])
                 {
-                    max = Math.Max(max, (j - i) * Math.Min(height[i], height[j]));
+                    i++;
+                }
+                else
+                {
+                    j--;
                 }
             }
             return max;
+            #endregion
         }
         public static int[] NextGreaterElement(int[] nums1, int[] nums2)
         {

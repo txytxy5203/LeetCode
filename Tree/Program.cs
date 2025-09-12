@@ -2,22 +2,23 @@
 using System.Text;
 
 
-NTreeNode a1 = new NTreeNode(70);
-NTreeNode a2 = new NTreeNode(3);
-NTreeNode a3 = new NTreeNode(4);
-NTreeNode a4 = new NTreeNode(5);
-NTreeNode a5 = new NTreeNode(100);
-NTreeNode a6 = new NTreeNode(200);
-NTreeNode a7 = new NTreeNode(300);
+//NTreeNode a1 = new NTreeNode(70);
+//NTreeNode a2 = new NTreeNode(3);
+//NTreeNode a3 = new NTreeNode(4);
+//NTreeNode a4 = new NTreeNode(5);
+//NTreeNode a5 = new NTreeNode(100);
+//NTreeNode a6 = new NTreeNode(200);
+//NTreeNode a7 = new NTreeNode(300);
 
-a1.childs.Add(a2);
-a1.childs.Add(a3);
-a1.childs.Add(a4);
-a2.childs.Add(a5);
-a3.childs.Add(a6);
-a4.childs.Add(a7);
-Console.WriteLine(MaxHappyValue(a1));
-
+//a1.childs.Add(a2);
+//a1.childs.Add(a3);
+//a1.childs.Add(a4);
+//a2.childs.Add(a5);
+//a3.childs.Add(a6);
+//a4.childs.Add(a7);
+//Console.WriteLine(MaxHappyValue(a1));
+int[] ints = new int[] { 1, 8, 6, 2, 5, 4, 8, 3, 7 };
+Console.WriteLine(Array_.MaxArea(ints));
 
 #region ListNode
 ListNode AddTwoNumbers(ListNode l1, ListNode l2)
@@ -584,6 +585,168 @@ static void DFS(Node node)
 }
 #endregion
 #region Tree
+void Morris(TreeNode head)
+{
+    // Morris遍历
+    if(head == null)
+        return;
+    TreeNode curr = head;
+    TreeNode mostRight = null;
+    while (curr != null)
+    {
+        mostRight = curr.left;
+        if(mostRight != null)      // 有左子树
+        {
+            while(mostRight.right != null && mostRight.right != curr)
+            {
+                mostRight = mostRight.right;
+            }
+            // mostRight 变成curr左树上最右边的节点
+            if(mostRight.right == null)
+            {
+                mostRight.right = curr;
+                curr = curr.left;
+                continue;
+            }
+            else
+            {
+                mostRight.right = null;
+            }
+        }
+        curr = curr.right;
+    }
+}
+void MorrisPre(TreeNode head)
+{
+    // Morris 先序遍历
+    // 先序  只经过一次的节点 直接打印
+    //       能够经过两次的节点 第一次经过时打印
+    if (head == null)
+        return;
+    TreeNode curr = head;
+    TreeNode mostRight = null;
+    while (curr != null)
+    {
+        mostRight = curr.left;
+        if (mostRight != null)      // 有左子树
+        {
+            while (mostRight.right != null && mostRight.right != curr)
+            {
+                mostRight = mostRight.right;
+            }
+            // mostRight 变成curr左树上最右边的节点
+            if (mostRight.right == null)
+            {
+                Console.WriteLine(curr.val);        // 第一次来到curr
+                mostRight.right = curr;
+                curr = curr.left;
+                continue;
+            }
+            else                                    // 第二次来到curr
+            {
+                mostRight.right = null;
+            }
+        }
+        else
+        {
+            Console.WriteLine(curr.val);            
+        }
+        curr = curr.right;
+    }
+}
+void MorrisMid(TreeNode head)
+{
+    // Morris 中序遍历
+    // 中序  只经过一次的节点 直接打印
+    //       能够经过两次的节点 第二次经过时打印
+    if (head == null)
+        return;
+    TreeNode curr = head;
+    TreeNode mostRight = null;
+    while (curr != null)
+    {
+        mostRight = curr.left;
+        if (mostRight != null)      // 有左子树
+        {
+            while (mostRight.right != null && mostRight.right != curr)
+            {
+                mostRight = mostRight.right;
+            }
+            // mostRight 变成curr左树上最右边的节点
+            if (mostRight.right == null)            // 第一次来到curr
+            {                                            
+                mostRight.right = curr;
+                curr = curr.left;
+                continue;
+            }
+            else                                    // 第二次来到curr
+            {
+                mostRight.right = null;
+            }
+        }
+        Console.WriteLine(curr.val);                // 这里加上打印就行了
+        curr = curr.right;
+    }
+}
+void MorrisPos(TreeNode head)
+{
+    // Morris 后序遍历
+    // 后序       第二次来到一个节点  则逆序打印左树的右边界    
+    if (head == null)
+        return;
+    TreeNode curr = head;
+    TreeNode mostRight = null;
+    while (curr != null)
+    {
+        mostRight = curr.left;
+        if (mostRight != null)      // 有左子树
+        {
+            while (mostRight.right != null && mostRight.right != curr)
+            {
+                mostRight = mostRight.right;
+            }
+            // mostRight 变成curr左树上最右边的节点
+            if (mostRight.right == null)            // 第一次来到curr
+            {                                                 
+                mostRight.right = curr;
+                curr = curr.left;
+                continue;
+            }
+            else                                    // 第二次来到curr
+            {
+                mostRight.right = null;
+                PrintEdge(curr.left);               // 逆序打印左子树的右边界
+            }
+        }
+        curr = curr.right;
+    }
+    PrintEdge(head);
+}
+void PrintEdge(TreeNode node)
+{
+    // 打印右边界
+    TreeNode tail = ReverseEdge(node);
+    TreeNode curr = tail;
+    while (curr != null)
+    {
+        Console.WriteLine(curr.val);
+    }
+    ReverseEdge(tail);
+}
+TreeNode ReverseEdge(TreeNode node)
+{
+    // 反转一个链表
+    TreeNode pre = null;
+    TreeNode next = null;
+    while (node != null)
+    {
+        next = node.right;
+        node.right = pre;
+        pre = node;
+        node = next;
+    }
+    return pre;
+}
 int MaxHappyValue(NTreeNode root)
 {
     // 派对快乐最大值
