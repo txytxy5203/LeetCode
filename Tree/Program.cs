@@ -2,23 +2,17 @@
 using System.Text;
 
 
-//NTreeNode a1 = new NTreeNode(70);
-//NTreeNode a2 = new NTreeNode(3);
-//NTreeNode a3 = new NTreeNode(4);
-//NTreeNode a4 = new NTreeNode(5);
-//NTreeNode a5 = new NTreeNode(100);
-//NTreeNode a6 = new NTreeNode(200);
-//NTreeNode a7 = new NTreeNode(300);
+TreeNode a1 = new TreeNode(2);
+TreeNode a2 = new TreeNode(1);
+TreeNode a3 = new TreeNode(3);
 
-//a1.childs.Add(a2);
-//a1.childs.Add(a3);
-//a1.childs.Add(a4);
-//a2.childs.Add(a5);
-//a3.childs.Add(a6);
-//a4.childs.Add(a7);
-//Console.WriteLine(MaxHappyValue(a1));
-int[] ints = new int[] { 1, 8, 6, 2, 5, 4, 8, 3, 7 };
-Console.WriteLine(Array_.MaxArea(ints));
+a1.left = a2;
+a1.right = a3;
+a2.left = null;
+a2.right = null;
+a3.left = null;
+a3.right = null;
+Console.WriteLine(IsValidBST(a1));
 
 #region ListNode
 ListNode AddTwoNumbers(ListNode l1, ListNode l2)
@@ -585,6 +579,49 @@ static void DFS(Node node)
 }
 #endregion
 #region Tree
+bool IsValidBST(TreeNode root)
+{
+    // 使用Morris中序遍历
+
+    if(root == null)
+        return false;
+    TreeNode curr = root;
+    TreeNode mostRight = null;
+    long pre = long.MinValue;
+    while (curr != null)
+    {
+        mostRight = curr.left;
+        if(mostRight != null)
+        {
+            while (mostRight.right != null && mostRight.right != curr)
+            {
+                mostRight = mostRight.right;
+            }
+            if (mostRight.right == null)
+            {
+                mostRight.right = curr;
+                curr = curr.left;
+                continue;
+            }
+            else
+            {
+                mostRight.right = null;
+            }
+        }
+
+        if (curr.val > pre)
+        {
+            pre = curr.val;
+        }
+        else
+        {
+            return false;
+        }
+        curr = curr.right;
+    }
+    return true;
+}
+
 void Morris(TreeNode head)
 {
     // Morris遍历
