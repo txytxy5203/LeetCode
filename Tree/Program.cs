@@ -2,8 +2,8 @@
 using System.Text;
 
 
-int[] ints = { 1, 2, 3 };
-Console.WriteLine(DP.WalkWays(2, 4, 4, 5));
+int[] ints = { 1,2,3 };
+Console.WriteLine(DP.CountRoutes(ints, 0, 2, 40));
 
 #region ListNode
 ListNode AddTwoNumbers(ListNode l1, ListNode l2)
