@@ -2,8 +2,8 @@
 using System.Text;
 
 
-int[] coins = { 1,2,5 };
-Console.WriteLine(DP.ClimbStairs2(2));
+int[] ints = { 1, 2, 1, 1 };
+Console.WriteLine(DP.Rob(ints));
 
 
 #region Temp

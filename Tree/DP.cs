@@ -12,11 +12,23 @@ namespace LeetCode
         public static int Rob(int[] nums)
         {
             // https://leetcode.cn/problems/house-robber/description/
-            return RobRecur(0, 0);
+            if(nums.Length == 0 || nums == null)
+                return 0;
+            int[] dp = new int[nums.Length];
+            Array.Fill(dp, -1);
+            return RobRecur(nums, 0, dp);
         }
-        static int RobRecur(int index, int money)
+        static int RobRecur(int[] nums, int index, int[] dp)
         {
-
+            if (index >= nums.Length)
+                return 0;
+            if (dp[index] != -1)
+                return dp[index];
+            int yes = nums[index] + RobRecur(nums, index + 2, dp);
+            int no = RobRecur(nums, index + 1, dp);
+            int max = Math.Max(yes, no);
+            dp[index] = max;
+            return max;
         }
         public static int ClimbStairs(int n)
         {
