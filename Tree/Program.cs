@@ -2,8 +2,13 @@
 using System.Text;
 
 
-int[] ints = { 1,2,3 };
-Console.WriteLine(DP.CountRoutes(ints, 0, 2, 40));
+int[] coins = { 1,2,5 };
+Console.WriteLine(DP.ClimbStairs2(2));
+
+
+#region Temp
+
+#endregion
 
 #region ListNode
 ListNode AddTwoNumbers(ListNode l1, ListNode l2)
