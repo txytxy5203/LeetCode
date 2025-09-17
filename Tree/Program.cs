@@ -2,8 +2,8 @@
 using System.Text;
 
 
-int[] ints = { 1, 2, 1, 1 };
-Console.WriteLine(DP.Rob(ints));
+int[] ints = { 1,2,3,1 };
+Console.WriteLine(DP.Rob2(ints));
 
 
 #region Temp

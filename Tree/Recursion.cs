@@ -181,6 +181,32 @@ namespace LeetCode
             int right = FirstPredictTheWinner(arr, L, R - 1);
             return Math.Min(left, right);       // 我后手  别人肯定只能让我拿最小的
         }
+        public static bool PredictTheWinner2(int[] nums)
+        {
+            int[,] f = new int[nums.Length, nums.Length];
+            int[,] s = new int[nums.Length, nums.Length];
+
+            for(int i = 0; i < nums.Length; i++)
+            {
+                f[i, i] = nums[i];
+                s[i, i] = 0;
+            }
+            for(int i = nums.Length - 2; i >= 0; i--)
+            {
+                for(int j = i + 1; j < nums.Length; j++)
+                {
+                    int left = nums[i] + s[i + 1, j];
+                    int right = nums[j] + s[i, j - 1];
+                    f[i, j] = Math.Max(left, right);
+
+                    left = f[i + 1, j];
+                    right = f[i, j - 1];
+                    s[i, j] = Math.Min(left, right);
+                }
+            }
+            return f[0, nums.Length - 1] >= s[0, nums.Length - 1];        
+        }
+
         public static void AllRank(string str)
         {
             // 再好好理解一下  我觉得写的比左神更好理解一些
@@ -238,5 +264,91 @@ namespace LeetCode
                 return 1;
             return 2 * Hnt(n - 1) + 1;
         }
+        //public static int TotalNQueens(int n)
+        //{
+        //    // 返回多少种
+        //    // https://leetcode.cn/problems/n-queens-ii/
+        //    // 依旧是递归的套路  每一层都管下一层要信息
+        //    int[] record = new int[n];
+        //    return TotalNQueensRecur(0, record, n);
+        //}
+        //public static int TotalNQueensRecur(int i, int[] record, int n)
+        //{
+        //    if (i == n)
+        //        return 1;
+        //    int res = 0;
+        //    for (int j = 0; j < n; j++)
+        //    {
+        //        if (IsValid(record, i, j))
+        //        {
+        //            record[i] = j;
+        //            res += TotalNQueensRecur(i + 1, record, n);
+        //        }
+        //    }
+        //    return res;
+        //}
+        //static bool IsValid(int[] record, int i, int j)
+        //{
+        //    for (int k = 0; k < i; k++)
+        //    {
+        //        if (record[k] == j)     // 不能共列
+        //            return false;
+        //        if (Math.Abs(record[k] - j) == Math.Abs(k - i))     // 看斜率
+        //            return false;
+        //        #region 自己的写法
+        //        //// 往两个斜角方向延申
+        //        //int x = record[k];
+        //        //int y = k;
+        //        //while (x <= j && y <= i)
+        //        //{
+        //        //    if (x == j && y == i)
+        //        //        return false;
+        //        //    x++;
+        //        //    y++;
+        //        //}
+        //        //x = record[k];
+        //        //y = k;
+        //        //while (x >= j && y <= i)
+        //        //{
+        //        //    if (x == j && y == i)
+        //        //        return false;
+        //        //    x--;
+        //        //    y++;
+        //        //}
+        //        #endregion
+        //    }
+        //    return true;
+        //}
+        ///// <summary>
+        ///// 请不要超过32皇后问题
+        ///// </summary>
+        ///// <param name="n"></param>
+        ///// <returns></returns>
+        //public static int TotalNQueens2(int n)
+        //{
+        //    // 利用位运算加速
+        //    // 左神视频暴力递归的最后面
+        //    if (n < 1 || n > 32)
+        //        return 0;
+        //    int limit = n == 32 ? -1 : (1 << n) - 1;
+        //    return TotalNQueensRecur2(limit, 0, 0, 0);
+        //}
+        //public static int TotalNQueensRecur2(int limit, int colLim, int leftDiaLim, int rightDiaLim)
+        //{
+        //    if (colLim == limit)
+        //        return 1;
+        //    int mostRightOne = 0;
+        //    int pos = limit & (~(colLim | leftDiaLim | rightDiaLim));
+        //    int res = 0;
+        //    while (pos != 0)
+        //    {
+        //        mostRightOne = pos & (~pos + 1);
+        //        pos -= mostRightOne;
+        //        res += TotalNQueensRecur2(limit, colLim | mostRightOne,
+        //                                  (leftDiaLim | mostRightOne) << 1,
+        //                                  (rightDiaLim | mostRightOne) >> 1);
+        //    }
+        //    return res;
+        //}
     }
 }

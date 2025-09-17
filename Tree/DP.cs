@@ -9,6 +9,92 @@ namespace LeetCode
 {
     public static class DP
     {
+        public static int HorseProbability(int x, int y, int k)
+        {
+            // (x,y)是目标位置  k为必须走几步
+            if (k < 1)
+                return 0;
+            return HorseProbabilityRecur(x, y, k, 0, 0);
+        }
+        static int HorseProbabilityRecur(int x, int y, int rest, int currX, int currY)
+        {
+            if(rest < 0 || currX < 0  || currX > 8 || currY < 0 || currY > 9)
+                return 0;
+            if(rest == 0)
+            {
+                if (currX == x && currY == y)
+                    return 1;
+                else
+                    return 0;
+            }
+            int way1 = HorseProbabilityRecur(x, y, rest - 1, currX + 2, currY + 1);
+            int way2 = HorseProbabilityRecur(x, y, rest - 1, currX + 2, currY - 1);
+            int way3 = HorseProbabilityRecur(x, y, rest - 1, currX + 1, currY + 2);
+            int way4 = HorseProbabilityRecur(x, y, rest - 1, currX + 1, currY - 2);
+            int way5 = HorseProbabilityRecur(x, y, rest - 1, currX - 2, currY + 1);
+            int way6 = HorseProbabilityRecur(x, y, rest - 1, currX - 2, currY - 1);
+            int way7 = HorseProbabilityRecur(x, y, rest - 1, currX - 1, currY + 2);
+            int way8 = HorseProbabilityRecur(x, y, rest - 1, currX - 1, currY - 2);
+            int total = way1 + way2 + way3 + way4 + way5 + way6 + way7 + way8;
+            return total;
+        }
+        public static int HorseProbability2(int x, int y, int k)
+        {
+            if (k < 1)
+                return 0;
+            int[,,] dp = new int[9, 10, k + 1];
+            for (int i = 0; i < 9; i++)
+            {
+                for (int j = 0; j < 10; j++)
+                {
+                    for (int e = 0; e < k + 1; e++)
+                    {
+                        dp[i, j, e] = -1;
+                    }
+                }
+            }
+            dp[x, y, 0] = 1;
+
+            for (int i = 0; i < 9; i++)
+            {
+                for(int j = 0;j < 10; j++)
+                {
+                    if (i == x && j == y)
+                        continue;
+                    dp[i, j, 0] = 0;
+                }
+            }
+
+            for (int i = 0;i < 9;i++)
+            {
+                for (int j = 0; j < 10;j++)
+                {
+                    for(int e = 1; e < k + 1; e++)
+                    {
+                        //int way1 = HorseProbabilityRecur(x, y, rest - 1, currX + 2, currY + 1);
+                        //int way2 = HorseProbabilityRecur(x, y, rest - 1, currX + 2, currY - 1);
+                        //int way3 = HorseProbabilityRecur(x, y, rest - 1, currX + 1, currY + 2);
+                        //int way4 = HorseProbabilityRecur(x, y, rest - 1, currX + 1, currY - 2);
+                        //int way5 = HorseProbabilityRecur(x, y, rest - 1, currX - 2, currY + 1);
+                        //int way6 = HorseProbabilityRecur(x, y, rest - 1, currX - 2, currY - 1);
+                        //int way7 = HorseProbabilityRecur(x, y, rest - 1, currX - 1, currY + 2);
+                        //int way8 = HorseProbabilityRecur(x, y, rest - 1, currX - 1, currY - 2);
+                        int way1 = i + 2 >= 9 || j + 1 >= 10 ? 0 : dp[i + 2, j + 1, e - 1];
+                        int way2 = i + 2 >= 9 || j - 1 < 0 ? 0 : dp[i + 2, j - 1, e - 1];
+                        int way3 = i + 1 >= 9 || j + 2 >= 10 ? 0 : dp[i + 1, j + 2, e - 1];
+                        int way4 = i + 1 >= 9 || j - 2 < 0 ? 0 : dp[i + 1, j - 2, e - 1];
+                        int way5 = i - 2 < 0 || j + 1 >= 10 ? 0 : dp[i - 2, j + 1, e - 1];
+                        int way6 = i - 2 < 0 || j - 1 < 0 ? 0 : dp[i - 2, j - 1, e - 1];
+                        int way7 = i - 1 < 0 || j + 2 >= 10 ? 0 : dp[i - 1, j + 2, e - 1];
+                        int way8 = i - 1 < 0 || j - 2 < 0 ? 0 : dp[i - 1, j - 2, e - 1];
+                        int total = way1 + way2 + way3 + way4 + way5 + way6 + way7 + way8;
+                        dp[i, j, e] = total;
+                    }
+                }
+            }
+
+            return dp[x, y, k];
+        }
         public static int Rob(int[] nums)
         {
             // https://leetcode.cn/problems/house-robber/description/
@@ -29,6 +115,20 @@ namespace LeetCode
             int max = Math.Max(yes, no);
             dp[index] = max;
             return max;
+        }
+        public static int Rob2(int[] nums)
+        {
+            if (nums.Length == 0 || nums == null)
+                return 0;
+            int[] dp = new int[nums.Length];
+            
+            for(int i = dp.Length - 1; i >= 0; i--)
+            {
+                int yes = i + 2 >= dp.Length ? nums[i] : nums[i] + dp[i + 2];
+                int no = i + 1 >= dp.Length ? 0 : dp[i + 1];
+                dp[i] = Math.Max(yes, no);
+            }
+            return dp[0];
         }
         public static int ClimbStairs(int n)
         {
