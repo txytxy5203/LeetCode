@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,6 +10,48 @@ namespace LeetCode
 {
     public static class DP
     {
+        public static double KnightProbability(int n, int k, int row, int column)
+        {
+            // https://leetcode.cn/problems/knight-probability-in-chessboard/description/
+            double[,,] dp = new double[n, n, k + 1];
+            for (int i = 0; i < n; i++)
+            {
+                for (int j = 0; j < n; j++)
+                {
+                    for (int e = 0; e < k + 1; e++)
+                    {
+                        dp[i, j, e] = -1;
+                    }
+                }
+            }
+            return KnightProabilityRecur(row, column, k, n, dp) / Math.Pow(8, k);
+        }
+        static double KnightProabilityRecur(int x, int y, int rest, int n, double[,,] dp)
+        {
+            if (x < 0 || x >= n || y < 0 || y >= n)
+            {
+                return 0;
+            }
+            if (dp[x, y, rest] != -1)
+                return dp[x, y, rest];
+            if (rest == 0)
+            {
+                dp[x, y, rest] = 1;
+                return 1;               
+            }
+
+            double way1 = KnightProabilityRecur(x + 2, y + 1, rest - 1, n, dp);
+            double way2 = KnightProabilityRecur(x + 2, y - 1, rest - 1, n, dp);
+            double way3 = KnightProabilityRecur(x + 1, y + 2, rest - 1, n, dp);
+            double way4 = KnightProabilityRecur(x + 1, y - 2, rest - 1, n, dp);
+            double way5 = KnightProabilityRecur(x - 2, y + 1, rest - 1, n, dp);
+            double way6 = KnightProabilityRecur(x - 2, y - 1, rest - 1, n, dp);
+            double way7 = KnightProabilityRecur(x - 1, y + 2, rest - 1, n, dp);
+            double way8 = KnightProabilityRecur(x - 1, y - 2, rest - 1, n, dp);
+            double total = way1 + way2 + way3 + way4 + way5 + way6 + way7 + way8;
+            dp[x, y, rest] = total;              
+            return dp[x, y, rest];
+        }
         public static int HorseProbability(int x, int y, int k)
         {
             // (x,y)是目标位置  k为必须走几步

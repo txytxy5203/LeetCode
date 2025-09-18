@@ -3,7 +3,7 @@ using System.Text;
 
 
 int[] ints = { 1,2,3,1 };
-Console.WriteLine(DP.Rob2(ints));
+Console.WriteLine(DP.KnightProbability(8, 30, 6, 4));
 
 
 #region Temp
