@@ -2,8 +2,8 @@
 using System.Text;
 
 
-int[] ints = { 1,2,3,1 };
-Console.WriteLine(DP.KnightProbability(8, 30, 6, 4));
+int[] ints = { 3, 5, 7, 8, 9, 10, 11 };
+Console.WriteLine(DP.Change2(ints, 500));
 
 
 #region Temp

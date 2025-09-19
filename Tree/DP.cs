@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data;
 using System.Linq;
 using System.Text;
@@ -28,6 +29,7 @@ namespace LeetCode
         }
         static double KnightProabilityRecur(int x, int y, int rest, int n, double[,,] dp)
         {
+            // 这里用double类型存储   保证不会溢出
             if (x < 0 || x >= n || y < 0 || y >= n)
             {
                 return 0;
@@ -224,13 +226,72 @@ namespace LeetCode
             dp[n - 1] = FibRecur(n - 1, dp) + FibRecur(n - 2, dp);
             return dp[n - 1];
         }
+        public static int Change(int[] coins, int amount)
+        {
+            int[,] dp = new int[amount + 1, coins.Length];
+            for (int i = 0;i< dp.GetLength(0); i++)
+            {
+                for (int j = 0; j < dp.GetLength(1); j++)
+                {
+                    dp[i, j] = -1;
+                }
+            }
+            return ChangeRecur(coins, amount, 0, dp);
+        }
+        public static int ChangeRecur(int[] coins, int rest, int index, int[,] dp)
+        {
+            if (index == coins.Length)
+                return rest == 0 ? 1 : 0;
+            if (dp[rest, index] != -1)
+                return dp[rest, index];
+            int ways = 0;
+            for (int i = 0; rest - i * coins[index] >= 0; i++)          // 选几张  不要超过总的金额即可
+            {
+                ways += ChangeRecur(coins, rest - i * coins[index], index + 1, dp);
+            }
+            dp[rest, index] = ways;
+            return ways;
+        }
+        public static int Change2(int[] coins, int amount)
+        {
+            int[,] dp = new int[amount + 1, coins.Length + 1];
+            for (int i = 0; i < dp.GetLength(0); i++)
+            {
+                for (int j = 0; j < dp.GetLength(1); j++)
+                {
+                    dp[i, j] = -1;
+                }
+            }
+            
+            for (int i = 0;i < dp.GetLength(0); i++)
+            {
+                if (i == 0)
+                    dp[i, coins.Length] = 1;
+                else
+                    dp[i, coins.Length] = 0;
+            }
+
+            for(int j = coins.Length - 1; j >= 0; j--)
+            {
+                for(int i = 0; i < dp.GetLength(0); i++)
+                {
+                    int ways = 0;
+                    for (int k = 0; i - k * coins[j] >= 0; k++)
+                    {
+                        ways += dp[i - k * coins[j], j + 1];
+                    }
+                    dp[i, j] = ways;
+                }
+            }
+            return dp[amount, 0];
+        }
         public static int CoinChange(int[] coins, int amount)
         {
             // https://leetcode.cn/problems/coin-change/description/
             // 超出了时间限制  没有AC
             Dictionary<int, int> dict = new Dictionary<int, int>();
             int cost = CoinChangeRecur(coins, amount, 0, dict);
-            return cost != int.MaxValue ? cost : -1;
+            return cost != int.MaxValue ? cost : -1;    
         }
         static int CoinChangeRecur(int[] coins, int rest, int curr, Dictionary<int, int> dict)
         {
@@ -278,8 +339,30 @@ namespace LeetCode
         }
         public static int CoinChange3(int[] coins, int amount)
         {
-            return 0;
+            int[] dp = new int[amount + 1];
+            Array.Fill(dp, -1);
+            dp[0] = 0;
+            for (int i = 1;i < dp.Length;i++)
+            {
+                int min = int.MaxValue;
+                foreach (int coin in coins)
+                {
+                    if (i - coin < 0)
+                    {
+                        continue;
+                    }
+                    else if (dp[i - coin] == int.MaxValue)
+                    {
+                        continue;
+                    }
+                    min = Math.Min(min, dp[i - coin]);
+                }
+                dp[i] = min == int.MaxValue ? int.MaxValue : min + 1;
+            }
+            return dp[amount] == int.MaxValue ? -1 : dp[amount];
         }
+        
+
         public static int CountRoutes(int[] locations, int start, int finish, int fuel)
         {
             // https://leetcode.cn/problems/count-all-possible-routes/description/
