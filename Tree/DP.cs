@@ -228,6 +228,7 @@ namespace LeetCode
         }
         public static int Change(int[] coins, int amount)
         {
+            // https://leetcode.cn/problems/coin-change-ii/description/
             int[,] dp = new int[amount + 1, coins.Length];
             for (int i = 0;i< dp.GetLength(0); i++)
             {
@@ -275,12 +276,20 @@ namespace LeetCode
             {
                 for(int i = 0; i < dp.GetLength(0); i++)
                 {
-                    int ways = 0;
-                    for (int k = 0; i - k * coins[j] >= 0; k++)
-                    {
-                        ways += dp[i - k * coins[j], j + 1];
-                    }
-                    dp[i, j] = ways;
+                    #region 没有优化的
+                    //int ways = 0;
+                    //for (int k = 0; i - k * coins[j] >= 0; k++)
+                    //{
+                    //    ways += dp[i - k * coins[j], j + 1];
+                    //}
+                    //dp[i, j] = ways;
+                    #endregion
+
+                    #region 优化版本
+                    // 填表的过程中如果有枚举行为  那么就可以看看同一层有没有可以能够加速计算的值！！！
+                    // 利用同一列前面的已经算过的值来加速运算  如果没有（不能越界）那么就只加上右边的值  
+                    dp[i, j] = i - coins[j] >= 0 ? dp[i - coins[j], j] + dp[i, j + 1] : dp[i, j + 1];       
+                    #endregion
                 }
             }
             return dp[amount, 0];
@@ -360,9 +369,7 @@ namespace LeetCode
                 dp[i] = min == int.MaxValue ? int.MaxValue : min + 1;
             }
             return dp[amount] == int.MaxValue ? -1 : dp[amount];
-        }
-        
-
+        }      
         public static int CountRoutes(int[] locations, int start, int finish, int fuel)
         {
             // https://leetcode.cn/problems/count-all-possible-routes/description/

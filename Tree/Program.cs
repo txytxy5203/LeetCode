@@ -2,8 +2,8 @@
 using System.Text;
 
 
-int[] ints = { 3, 5, 7, 8, 9, 10, 11 };
-Console.WriteLine(DP.Change2(ints, 500));
+int[] ints = { 1,2,4,6,7 };
+Console.WriteLine(Array_.MinPaint("RGRGR"));
 
 
 #region Temp

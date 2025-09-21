@@ -9,6 +9,118 @@ namespace LeetCode
 {
     public static class Array_
     {
+        public static int MinPaint(string str)
+        {
+            // 有一些排成一行的正方形。每个正方形已经被染成红色和绿色。现在可以选择任意一个正方形然后用这两种颜色的任意一种进行染色，这个正方形的颜色将被覆盖。
+            // 目标是在完成染色之后，每个红色R都比每个绿色G距离最左侧近。返回最少需要涂染多少正方形
+            // 例如：s = RGRGR，我们涂染之后变成RRRGG满足要求了，涂染的个数为2，没有比这个更好的涂染方案
+            // 前缀和
+            int[] frontR = new int[str.Length];
+            int[] frontG = new int[str.Length];
+            int[] backG = new int[str.Length];
+            int countR = 0;
+            int countG = 0;
+            for (int i = 0; i < str.Length; i++)
+            {
+                if (str[i] == 'R')
+                    countR++;
+                else
+                    countG++;                    
+                frontR[i] = countR;
+                frontG[i] = countG;
+            }
+
+            for (int i = 0;i < str.Length;i++)
+            {
+                backG[i] = frontG[str.Length - 1] - frontG[i];
+            }
+
+            int minIndex = 0;
+            int minValue = int.MaxValue;
+            for (int i = 0; i < str.Length; i++)
+            {
+                int temp = frontR[i] + backG[i];
+                if (minValue > temp)
+                {
+                    minIndex = i;
+                    minValue = temp;
+                }
+            }
+            return minValue;
+        }
+        public static bool EatGrass(int n)
+        {
+            // 草一共有n的重量，两只牛轮流吃草，A牛先吃，B牛后吃
+            // 每只牛在自己的回合，吃草的重量必须是4的幂，1、4、16、64....
+            // 谁在自己的回合正好把草吃完谁赢，根据输入的n，返回谁赢
+            return EatGrassRecur(n, n);
+        }
+        static bool EatGrassRecur(int rest, int n)
+        {
+            if(rest == 0)
+                return false;
+            for(int pow4 = 1;pow4 <= rest; pow4 <<= 2)
+            {
+                if(rest == pow4)
+                    return true;
+                if (!EatGrassRecur(rest - pow4, n))
+                    return true;
+                if(pow4 > n / 4)
+                    break;
+            }
+            return false;
+        }
+        public static bool EatGrass2(int n)
+        {
+            // 打表法出规律后直接写
+            if (n % 5 == 0 || n % 5 == 2)
+                return false;
+            else
+                return true;
+        }
+        public static int AppleMinBags(int n)
+        {
+            // 有装下8个苹果的袋子、装下6个苹果的袋子，一定要保证买苹果时所有使用的袋子都装满
+            // 对于无法装满所有袋子的方案不予考虑，给定n个苹果，返回至少要多少个袋子
+            // 如果不存在每个袋子都装满的方案返回-1
+
+            if (n % 2 != 0)
+                return -1;
+            int x = n / 8;
+            for (int i = x; i >= 0; i--)
+            {
+                int rest = n - i * 8;
+                if(rest >= 24)               // 大于等于24的时候就不用再判断了  因为8和6的最小公倍数是24  3个8比4个6用的袋子数更少
+                    break;
+                if(rest % 6 == 0)
+                {
+                    return i + rest / 6;
+                }
+            }
+            return -1;
+        }
+        public static int CordCoverMaxPoint(int[] points, int l)
+        {
+            // 给定一个有序数组arr，代表数轴上个从左到右有n个点arr[0]、arr[1]...arr[n - 1]
+            // 给定一个正数L，代表一根长度为L的绳子，求绳子最多能覆盖其中的几个点
+            int slow = 0;
+            int fast = 0;
+            int res = 0;
+            while(fast < points.Length)
+            {
+                // 只要窗口差 ≤ l 就扩张
+                if (points[fast] - points[slow] <= l)
+                {
+                    res = Math.Max(res, fast - slow + 1);
+                    fast++;
+                }
+                else
+                {
+                    slow++;
+                }
+            }
+            return res;
+        }
         public static string IntToRoman(int num)
         {
             return "";
