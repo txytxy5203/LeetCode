@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Buffers;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -9,6 +10,104 @@ namespace LeetCode
 {
     public static class Array_
     {
+        public static int NumOfSubarrays(int[] arr, int k, int threshold)
+        {
+            // https://leetcode.cn/problems/number-of-sub-arrays-of-size-k-and-average-greater-than-or-equal-to-threshold/description/
+            int i = 0;
+            int result = 0;
+            int sum = 0;
+            int thresholdSum = threshold * k;
+            for (; i < k; i++)
+            {
+                sum += arr[i];
+            }
+            if (sum >= thresholdSum)
+                result++;
+
+            while (i < arr.Length)
+            {
+                sum += arr[i] - arr[i - k];
+                if(sum >= thresholdSum)
+                    result++;
+                i++;
+            }
+            return result;
+        }
+        public static double FindMaxAverage(int[] nums, int k)
+        {
+            // https://leetcode.cn/problems/maximum-average-subarray-i/description/
+            int currSum = 0;
+            int max = int.MinValue;
+            int i = 0;
+            for (; i < k; i++)
+            {
+                currSum += nums[i];
+            }
+            max = currSum;
+
+            i = 0;
+            while (i + k < nums.Length)
+            {
+                currSum += nums[i + k] - nums[i];
+                if (currSum > max)
+                {
+                    max = currSum;
+                }
+                i++;
+            }
+            return max / (double)k;
+        }
+        public static int Largest1BorderedSquare(int[][] grid)
+        {
+            // https://leetcode.cn/problems/largest-1-bordered-square/description/
+
+            int[,] right = new int[grid.Length, grid[0].Length];
+            int[,] down = new int[grid.Length, grid[0].Length];
+
+            // 填写辅助数组
+            for (int i = 0; i < grid.Length; i++)
+            {
+                int temp = 0;
+                for (int j = grid[0].Length - 1; j >= 0; j--)
+                {
+                    if (grid[i][j] == 1)
+                        temp++;
+                    else
+                        temp = 0;
+                    right[i, j] = temp;
+                }
+            }
+            for (int j = 0; j < grid[0].Length; j++)
+            {
+                int temp = 0;
+                for (int i = grid.Length - 1; i >= 0; i--)
+                {
+                    if (grid[i][j] == 1)
+                        temp++;
+                    else
+                        temp = 0;
+                    down[i, j] = temp;
+                }
+            }
+
+            int max = 0;
+            for (int i = 0; i < grid.Length; i++)
+            {
+                for (int j = 0; j < grid[0].Length; j++)
+                {
+                    for (int k = 1; k - 1 < Math.Min(grid.Length - i, grid[0].Length - j); k++)
+                    {
+                        if (right[i, j] >= k && down[i, j] >= k && right[i + k - 1, j] >= k && down[i, j + k - 1] >= k)
+                        {
+                            max = Math.Max(max, k);
+                        }
+                    }
+                }
+            }
+            if (max == 0)
+                return 0;
+            return max * max;
+        }
         public static int MinPaint(string str)
         {
             // 有一些排成一行的正方形。每个正方形已经被染成红色和绿色。现在可以选择任意一个正方形然后用这两种颜色的任意一种进行染色，这个正方形的颜色将被覆盖。

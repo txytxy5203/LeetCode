@@ -2,8 +2,9 @@
 using System.Text;
 
 
-int[] ints = { 1,2,4,6,7 };
-Console.WriteLine(Array_.MinPaint("RGRGR"));
+int[] ints = new int[] { 11, 13, 17, 23, 29, 31, 7, 5, 2, 3 };
+Console.WriteLine(Array_.NumOfSubarrays(ints, 3, 5));
+
 
 
 #region Temp

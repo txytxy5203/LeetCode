@@ -4,6 +4,39 @@ namespace LeetCode
 {
     public static class String_
     {
+        public static int MaxVowels(string s, int k)
+        {
+            // https://leetcode.cn/problems/maximum-number-of-vowels-in-a-substring-of-given-length/description/
+            Queue<char> queue = new Queue<char>();
+            int i = 0;
+            int curr = 0;
+            int max = 0;
+            for (; i < k; i++)
+            {
+                if ("aeiou".Contains(s[i]))
+                    curr++;
+                queue.Enqueue(s[i]);
+            }
+            max = Math.Max(max, curr);
+
+            while(i < s.Length)
+            {
+                char outChar = queue.Dequeue();
+                if("aeiou".Contains(outChar))
+                    curr--;
+
+                queue.Enqueue(s[i]);
+                if ("aeiou".Contains(s[i]))
+                {
+                    curr++;
+                }
+                max = Math.Max(max, curr);
+                if(max == k)
+                    return max;
+                i++;
+            }
+            return max;
+        }
         public static int MyAtoi(string s)
         {
             // https://leetcode.cn/problems/string-to-integer-atoi/description/
@@ -278,7 +311,7 @@ namespace LeetCode
             //int[] pArr = new int[s.Length];         // 回文半径数组
             //int c = -1;         // 中心
             //int r = -1;         // 回文右边界的再往右一个位置   最右的有效区是R-1位置
-            //int max = int.MinValue;
+            //int curr = int.MinValue;
             //for (int i = 0; i != str.Length; i++)
             //{
             //    // i至少的回文区域  先给pArr[i]
@@ -295,9 +328,9 @@ namespace LeetCode
             //        r = i + pArr[i];
             //        c = i;
             //    }
-            //    max = Math.Max(max, pArr[i]);
+            //    curr = Math.Max(curr, pArr[i]);
             //}
-            //return max - 1;
+            //return curr - 1;
             #endregion
 
             #region 自己写的
@@ -307,7 +340,7 @@ namespace LeetCode
             //int[] pArr = new int[str.Length];         // 回文半径数组       "aba" 回文半径为1  我这里和左神的定义有点区别
             //int c = -1;         // 中心
             //int r = -1;         // 回文最大右边界
-            //string max = "";
+            //string curr = "";
 
             //for (int i = 0; i < str.Length; i++)
             //{
@@ -324,7 +357,7 @@ namespace LeetCode
             //            r = i + index - 1;                       
             //            c = i;
             //        }
-            //        max = 2 * index - 1 > max.Length ? str.Substring(i  - index + 1, 2 * index - 1) : max;
+            //        curr = 2 * index - 1 > curr.Length ? str.Substring(i  - index + 1, 2 * index - 1) : curr;
             //    }
             //    else
             //    {
@@ -349,11 +382,11 @@ namespace LeetCode
             //                r = i + index - 1;
             //                c = i;
             //            }
-            //            max = 2 * index - 1 > max.Length ? str.Substring(i - index + 1, 2 * index - 1) : max;
+            //            curr = 2 * index - 1 > curr.Length ? str.Substring(i - index + 1, 2 * index - 1) : curr;
             //        }
             //    }
             //}
-            //return max.Replace("#", "");
+            //return curr.Replace("#", "");
             #endregion
 
 
@@ -463,3 +496,4 @@ namespace LeetCode
         }
     }
 }
+

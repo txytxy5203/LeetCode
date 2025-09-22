@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -9,7 +10,39 @@ namespace LeetCode
 {
     public static class Math_
     {
-        
+        public static int Rand10()
+        {
+            // https://leetcode.cn/problems/implement-rand10-using-rand7/description/
+            // 核心思想就是搞出来 0 1 生成器
+            int num = 0;
+            do
+            {
+                num = 0;
+                for (int i = 0; i < 4; i++)
+                {
+                    num = (num << 1) + RandZeroOne();
+                }
+            }
+            while (num > 9);
+            return num + 1;
+        }
+        static int RandZeroOne()
+        {
+            // 等概率返回0或者1
+            int a = 0;
+            do
+            {
+                a = 0;
+                a = Rand7();
+            }
+            while (a == 7);
+            return a < 4 ? 0 : 1;
+        }
+        static int Rand7()
+        {
+            Random random = new Random();
+            return random.Next(1, 8);
+        }
         public static int Reverse(int x)
         {
             // https://leetcode.cn/problems/reverse-integer/description/
