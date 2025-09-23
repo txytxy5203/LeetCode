@@ -3,13 +3,109 @@ using System.Buffers;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace LeetCode
 {
     public static class Array_
     {
+        public static long MaxSum(IList<int> nums, int m, int k)
+        {
+            // https://leetcode.cn/problems/maximum-sum-of-almost-unique-subarray/description/
+            // 一定要熟悉  1.入  2.更新  3.出
+            long max = 0;
+            long curr = 0;
+            Dictionary<int, int> dict = new Dictionary<int, int>();
+            for (int i = 0; i < nums.Count; i++)
+            {
+                // 入
+                if (dict.ContainsKey(nums[i]))
+                    dict[nums[i]]++;
+                else
+                    dict[nums[i]] = 1;
+                curr += nums[i];
+
+                int left = i - k + 1;
+                if (left < 0)
+                    continue;
+
+                // 更新
+                if (dict.Count >= m)
+                    max = Math.Max(max, curr);
+
+                // 出
+                if (dict.ContainsKey(nums[left]) && dict[nums[left]] != 1)
+                    dict[nums[left]]--;
+                else
+                    dict.Remove(nums[left]);
+                curr -= nums[left];
+            }
+            return max;
+        }
+        public static int MinimumRecolors(string blocks, int k)
+        {
+            // https://leetcode.cn/problems/minimum-recolors-to-get-k-consecutive-black-blocks/description/
+
+            int min = 0;
+            int i = 0;
+            int curr = 0;
+            for (; i < k; i++)
+            {
+                if (blocks[i] == 'W')
+                    curr++;
+            }
+            min = curr;
+
+            while (i < blocks.Length)
+            {
+                if (blocks[i] == 'W')
+                    curr++;
+                if (blocks[i - k] == 'W')
+                    curr--;
+                min = Math.Min(min, curr);
+                i++;
+            }
+            return min;
+
+        }
+        public static int[] GetAverages(int[] nums, int k)
+        {
+            // https://leetcode.cn/problems/k-radius-subarray-averages/description/
+            int[] result = new int[nums.Length];
+
+            if(2 * k + 1 > nums.Length)
+            {
+                Array.Fill(nums, -1);
+                return nums;
+            }
+            long sum = 0;           // 一定要注意溢出的问题
+            int i = 0;
+            for (; i < k; i++)
+            {
+                result[i] = -1;            
+            }
+
+            for(int j = 0; j < i * 2 + 1; j++)      // 初始化sum
+            {
+                sum += nums[j];
+            }
+
+            for (; i < nums.Length - k; i++)
+            {
+                result[i] = (int)(sum / (2 * k + 1));
+                if(i + k + 1 < nums.Length)
+                    sum += nums[i + k + 1] - nums[i - k];
+            }
+
+            for(; i < nums.Length; i++)
+            {
+                result[i] = -1;
+            }
+            return result;
+        }
         public static int NumOfSubarrays(int[] arr, int k, int threshold)
         {
             // https://leetcode.cn/problems/number-of-sub-arrays-of-size-k-and-average-greater-than-or-equal-to-threshold/description/
