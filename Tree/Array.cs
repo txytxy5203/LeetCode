@@ -12,6 +12,38 @@ namespace LeetCode
 {
     public static class Array_
     {
+        public static int MaxSatisfied(int[] customers, int[] grumpy, int minutes)
+        {
+
+        }
+        public static int MaxScore(int[] cardPoints, int k)
+        {
+            
+            int total = 0;
+            if(k == cardPoints.Length)
+                return cardPoints.Sum();
+            
+            int l = cardPoints.Length - k;
+            int curr = 0;
+            int min = int.MaxValue;
+
+            for (int i = 0; i < cardPoints.Length; i++) 
+            {
+                // 入
+                curr += cardPoints[i];
+                total += cardPoints[i];
+
+                int left = i - l + 1;
+                if (left < 0)
+                    continue;
+                // 更新
+                min = Math.Min(min, curr);
+
+                // 出
+                curr -= cardPoints[left];
+            }
+            return total - min;
+        }
         public static long MaximumSubarraySum(int[] nums, int k)
         {
             // https://leetcode.cn/problems/maximum-sum-of-distinct-subarrays-with-length-k/description/
