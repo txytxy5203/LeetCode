@@ -12,6 +12,37 @@ namespace LeetCode
 {
     public static class Array_
     {
+        public static long MaximumSubarraySum(int[] nums, int k)
+        {
+            // https://leetcode.cn/problems/maximum-sum-of-distinct-subarrays-with-length-k/description/
+            long max = 0;
+            long curr = 0;
+            Dictionary<int, int> dict = new Dictionary<int, int>();
+            for (int i = 0; i < nums.Length; i++)
+            {
+                // 入
+                if (dict.ContainsKey(nums[i]))
+                    dict[nums[i]]++;
+                else
+                    dict[nums[i]] = 1;
+                curr += nums[i];
+
+                // 更新
+                int left = i - k + 1;
+                if (left < 0)
+                    continue;
+                if(dict.Count == k)
+                    max = Math.Max(max, curr);
+
+                // 出
+                if (dict.ContainsKey(nums[left]) && dict[nums[left]] != 1)
+                    dict[nums[left]]--;
+                else
+                    dict.Remove(nums[left]);
+                curr -= nums[left];
+            }
+            return max;
+        }
         public static long MaxSum(IList<int> nums, int m, int k)
         {
             // https://leetcode.cn/problems/maximum-sum-of-almost-unique-subarray/description/

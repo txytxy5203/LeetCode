@@ -2,8 +2,8 @@
 using System.Text;
 
 
-List<int> list = new List<int>() { 1, 2, 2 };
-var a = Array_.MaxSum(list, 2, 2);
+int[] list = { 9, 9, 9, 1, 2, 3 };
+var a = Array_.MaximumSubarraySum(list, 3);
 Console.WriteLine(a);
 
 
