@@ -12,9 +12,95 @@ namespace LeetCode
 {
     public static class Array_
     {
+        public static long MaxProfit(int[] prices, int[] strategy, int k)
+        {
+            // https://leetcode.cn/problems/best-time-to-buy-and-sell-stock-using-strategy/description/
+            // 不能AC   我还是两次for的思路 纯纯的不行
+            long total = 0;
+            for (int i = 0; i < prices.Length; i++)
+            {
+                total += prices[i] * strategy[i];
+            }
+
+            long max = total;
+            for (int i = 0;i <= prices.Length - k; i++)
+            {
+                long curr = 0;
+                long currOrigin = 0;
+                for (int j = 0; j < k; j++)
+                {
+                    if(j >= k / 2)       // 后 k/2个是1
+                    {
+                        curr += prices[i + j];
+                    }
+                    currOrigin += prices[i + j] * strategy[i + j];
+                }
+                max = Math.Max(max, curr + total - currOrigin);
+            }
+            return max;
+        }
+        public static long MaxProfit2(int[] prices, int[] strategy, int k)
+        {
+            long total = 0;
+            for (int i = 0; i < prices.Length; i++)
+            {
+                total += prices[i] * strategy[i];
+            }
+
+
+            int curr = 0;
+            int currOrigin = 0;
+            for (int i = 0; i < prices.Length; i++)
+            {
+                // 入
+                curr += prices[i];
+                currOrigin += prices[i] * strategy[i];
+
+                int left = i - k + 1;
+                if (left < 0)
+                    continue;
+
+                // 更新
+
+                // 出
+                currOrigin -= prices[left] * strategy[left];
+                curr -= prices[i + k / 2];
+            }
+        }
         public static int MaxSatisfied(int[] customers, int[] grumpy, int minutes)
         {
+            // https://leetcode.cn/problems/grumpy-bookstore-owner/description/
+            int total = 0;
+            for (int i = 0; i < customers.Length; i++)
+            {
+                if (grumpy[i] == 0)
+                    total += customers[i];
+            }
+            if (minutes >= customers.Length)
+                return customers.Sum();
 
+            int max = 0;
+            int curr = 0;
+            int currTotal = 0;
+            for (int i = 0; i < customers.Length; i++)
+            {
+                // 入
+                curr += customers[i];
+                if (grumpy[i] == 0)             // 记录当前滑动窗口的和  根据老板的开心度
+                    currTotal += customers[i];
+
+                int left = i - minutes + 1;
+                if (left < 0)
+                    continue;
+                // 更新
+                max = Math.Max(max, curr + total - currTotal );
+
+                // 出
+                curr -= customers[left];
+                if (grumpy[left] == 0)             
+                    currTotal -= customers[left];
+            }
+            return max;
         }
         public static int MaxScore(int[] cardPoints, int k)
         {

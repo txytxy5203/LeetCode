@@ -2,8 +2,9 @@
 using System.Text;
 
 
-int[] list = { 9, 7, 7, 9, 7, 7, 9 };
-var a = Array_.MaxScore(list, 7);
+int[] list1 = { 5,4,3 };
+int[] list2 = { 1,1,0 };
+var a = Array_.MaxProfit(list1, list2, 2);
 Console.WriteLine(a);
 
 
