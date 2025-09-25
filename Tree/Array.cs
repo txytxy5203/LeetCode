@@ -48,12 +48,14 @@ namespace LeetCode
             }
 
 
-            int curr = 0;
-            int currOrigin = 0;
+            long curr = 0;
+            long currOrigin = 0;
+            long max = total;
             for (int i = 0; i < prices.Length; i++)
             {
                 // 入
-                curr += prices[i];
+                if(i >= k / 2)
+                    curr += prices[i];
                 currOrigin += prices[i] * strategy[i];
 
                 int left = i - k + 1;
@@ -61,11 +63,15 @@ namespace LeetCode
                     continue;
 
                 // 更新
+                max = Math.Max(max, curr + total - currOrigin);
+
 
                 // 出
                 currOrigin -= prices[left] * strategy[left];
-                curr -= prices[i + k / 2];
+                if(left + k / 2 < prices.Length)
+                    curr -= prices[left + k / 2];
             }
+            return max;
         }
         public static int MaxSatisfied(int[] customers, int[] grumpy, int minutes)
         {

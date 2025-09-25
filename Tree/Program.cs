@@ -2,9 +2,9 @@
 using System.Text;
 
 
-int[] list1 = { 5,4,3 };
-int[] list2 = { 1,1,0 };
-var a = Array_.MaxProfit(list1, list2, 2);
+int[] list1 = { 7, 1, 11, 22, 29 };
+int[] list2 = { 0, -1, -1, -1, -1 };
+var a = Array_.MaxProfit2(list1, list2, 4);
 Console.WriteLine(a);
 
 
