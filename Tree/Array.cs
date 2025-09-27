@@ -12,6 +12,107 @@ namespace LeetCode
 {
     public static class Array_
     {
+        public static int[] Decrypt(int[] code, int k)
+        {
+            // https://leetcode.cn/problems/defuse-the-bomb/description/
+            int curr = 0;
+            int[] result = new int[code.Length];
+            if(k > 0)
+            {
+
+                for(int i = 1;i < code.Length + k; i++)
+                {
+                    // 入
+                    if (i >= code.Length)
+                    {
+                        curr += code[i - code.Length];
+                    }
+                    else
+                    {
+                        curr += code[i];
+                    }
+
+                    int left = i - k;       // 这里的left不需要加1了  因为是不带自己这个的
+                    if(left < 0)
+                        continue;
+                    
+                    // 更新
+                    result[left] = curr;
+                    
+
+                    // 出
+                    if(left + 1 >= code.Length)
+                        curr -= code[left + 1 - code.Length];
+                    else
+                        curr -= code[left + 1];
+                }
+            }
+            else if (k < 0)
+            {
+                // TODO
+                for (int i = 0 + k + 1; i < code.Length; i++)
+                {
+                    // 入
+                    if (i <= 0)
+                        curr += code[i - 1 + code.Length];
+                    else
+                        curr += code[i - 1];
+
+                    if (i < 0)
+                        continue;
+                    // 更新
+                    result[i] = curr;
+
+                    // 出
+                    if (i + k < 0)
+                        curr -= code[i + k + code.Length];
+                    else
+                        curr -= code[i + k];
+                }
+            }          
+            return result;
+        }
+        public static int MinSwaps(int[] nums)
+        {
+            // https://leetcode.cn/problems/minimum-swaps-to-group-all-1s-together-ii/description/
+            int k = nums.Sum();
+            int min = int.MaxValue;
+            int curr = 0;
+            for (int i = 0; i < nums.Length + k; i++)
+            {
+                // 入
+                if(i >= nums.Length)
+                {
+                    if (nums[i - nums.Length] == 0)
+                        curr++;
+                }
+                else
+                {
+                    if (nums[i] == 0)
+                        curr++;
+                }
+                
+                int left = i - k + 1;
+                if (left < 0)
+                    continue;
+
+                // 更新
+                min = Math.Min(curr, min);
+
+                // 出
+                if(left >= nums.Length)
+                {
+                    if (nums[left - nums.Length] == 0)
+                        curr--;
+                }
+                else
+                {
+                    if (nums[left] == 0)
+                        curr--;
+                }                
+            }
+            return min;
+        }
         public static long MaxProfit(int[] prices, int[] strategy, int k)
         {
             // https://leetcode.cn/problems/best-time-to-buy-and-sell-stock-using-strategy/description/

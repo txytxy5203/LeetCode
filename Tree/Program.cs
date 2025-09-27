@@ -1,11 +1,13 @@
 ﻿using LeetCode;
+using System.Net.WebSockets;
 using System.Text;
 
 
-int[] list1 = { 7, 1, 11, 22, 29 };
+int[] list1 = { 2, 4, 9, 3 };
 int[] list2 = { 0, -1, -1, -1, -1 };
-var a = Array_.MaxProfit2(list1, list2, 4);
+var a = String_.MaxFreq("abcde", 2, 3, 3);
 Console.WriteLine(a);
+
 
 
 #region Temp

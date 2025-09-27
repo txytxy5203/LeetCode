@@ -4,6 +4,41 @@ namespace LeetCode
 {
     public static class String_
     {
+        public static int MaxFreq(string s, int maxLetters, int minSize, int maxSize)
+        {
+            // https://leetcode.cn/problems/maximum-number-of-occurrences-of-a-substring/description/
+
+  
+            Dictionary<char, int> dict = new Dictionary<char, int>();
+            Dictionary<string, int> result = new Dictionary<string, int> ();
+            for (int i = 0; i < s.Length; i++)
+            {
+                // 入
+                if (dict.ContainsKey(s[i]))
+                    dict[s[i]]++;
+                else
+                    dict[s[i]] = 1;
+
+                int left = i - minSize + 1;
+                if(left < 0)
+                    continue;
+                // update
+                if (dict.Count <= maxLetters)
+                {
+                    string str = s.Substring(left, minSize);
+                    if (result.ContainsKey(str))
+                        result[str]++;
+                    else
+                        result[str] = 1;
+                }
+                // out
+                if (dict[s[left]] == 1)
+                    dict.Remove(s[left]);
+                else
+                    dict[s[left]]--;
+            }
+            return result.Count == 0 ? 0 : result.Values.Max();
+        }
         public static int MaxVowels(string s, int k)
         {
             // https://leetcode.cn/problems/maximum-number-of-vowels-in-a-substring-of-given-length/description/
