@@ -4,11 +4,52 @@ namespace LeetCode
 {
     public static class String_
     {
+        public static IList<int> FindAnagrams(string s, string p)
+        {
+            // 
+        }
+        public static bool CheckInclusion(string s1, string s2)
+        {
+            // https://leetcode.cn/problems/permutation-in-string/description/
+            
+            if(s1.Length > s2.Length)
+                return false;
+            int[] s1Counts = new int[26];
+            int[] s2Counts = new int[26];
+
+            foreach (var c in s1)
+            {
+                s1Counts[c - 'a']++;
+            }
+            
+            for (int i = 0; i < s2.Length; i++)
+            {
+                // in
+                s2Counts[s2[i] - 'a']++;
+
+                int left = i - s1.Length + 1;
+                if (left < 0)
+                    continue;
+                // update
+                if (AreCountsEqual(s1Counts, s2Counts))
+                    return true;
+
+                // out
+                s2Counts[s2[left] - 'a']--;
+            }
+            return false;
+        }
+        static bool AreCountsEqual(int[] count1, int[] count2)
+        {
+            for (int i = 0; i < count1.Length; i++) {
+                if (count1[i] != count2[i])
+                    return false;   
+            }
+            return true;
+        }
         public static int MaxFreq(string s, int maxLetters, int minSize, int maxSize)
         {
-            // https://leetcode.cn/problems/maximum-number-of-occurrences-of-a-substring/description/
-
-  
+            // https://leetcode.cn/problems/maximum-number-of-occurrences-of-a-substring/description/ 
             Dictionary<char, int> dict = new Dictionary<char, int>();
             Dictionary<string, int> result = new Dictionary<string, int> ();
             for (int i = 0; i < s.Length; i++)

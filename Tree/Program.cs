@@ -3,9 +3,9 @@ using System.Net.WebSockets;
 using System.Text;
 
 
-int[] list1 = { 2, 4, 9, 3 };
+int[] list1 = { 1, -1, -3, -2, 3 };
 int[] list2 = { 0, -1, -1, -1, -1 };
-var a = String_.MaxFreq("abcde", 2, 3, 3);
+var a = String_.CheckInclusion("ab", "eidboaoo");
 Console.WriteLine(a);
 
 

@@ -12,6 +12,56 @@ namespace LeetCode
 {
     public static class Array_
     {
+        public static int[] GetSubarrayBeauty(int[] nums, int k, int x)
+        {
+            // https://leetcode.cn/problems/sliding-subarray-beauty/description/
+            int[] result = new int[nums.Length - k + 1];
+            ListNode head = new ListNode(int.MaxValue);
+            ListNode curr = head;
+            int num = k - 1;
+            while(num > 0)
+            {
+                ListNode node = new ListNode(int.MaxValue);
+                curr.next = node;
+                curr = curr.next;
+                num--;
+            }
+            curr = head;
+
+            for (int i = 0; i < nums.Length; i++)
+            {
+                // in
+                ListNode node = null;
+                while (nums[i] > curr.val)
+                {
+                    node = curr;
+                    curr = curr.next;
+                }
+                ListNode add = new ListNode(nums[i]);
+                node.next = add;
+                add.next = curr;
+
+                int left = i - k + 1;
+                if (left < 0)
+                    continue;
+                // update
+                if (head.next.val < 0)
+                    result[left] = head.next.val;
+                else
+                    result[left] = 0;
+
+                // out
+                node = head;
+                add = head;
+                while (node.val != nums[left])
+                {
+                    add = node;
+                    node = node.next;
+                }
+                add.next = node.next;
+            }
+            return result;
+        }
         public static int[] Decrypt(int[] code, int k)
         {
             // https://leetcode.cn/problems/defuse-the-bomb/description/
