@@ -1,12 +1,135 @@
-﻿using System.Text;
+﻿using System.Collections.Specialized;
+using System.Text;
 
 namespace LeetCode
 {
     public static class String_
     {
+        public static int MaximumLengthSubstring(string s)
+        {
+            // https://leetcode.cn/problems/maximum-length-substring-with-two-occurrences/description/
+            int left = 0;
+            int ans = 0;
+            int[] count = new int[26];
+            for (int i = 0; i < s.Length; i++)
+            {
+                int right = s[i] - 'a';
+                count[right]++;
+                while (count[right] > 2)
+                {
+                    count[s[left] - 'a']--;
+                    left++;
+                }
+                ans = Math.Max(ans, i - left + 1);
+            }
+            return ans;
+        }
+        public static string SubStrHash(string s, int power, int modulo, int k, int hashValue)
+        {
+            // https://leetcode.cn/problems/find-substring-with-given-hash-value/description/
+            for (int i = 0; i < s.Length; i++)
+            {
+                // in
+
+                int left = i - k + 1;
+                if (left < 0)
+                    continue;
+
+                // update
+                if(SubStrHashHelper(s.Substring(left, k),power ,modulo) == hashValue)
+                    return s.Substring(left, k);
+
+            }
+            return "";
+        }
+        static int SubStrHashHelper(string str, int power, int modulo)
+        { 
+            double hashValue = 0;
+            double currentPower = 1;
+            for (int i = 0; i < str.Length; i++)
+            {
+                double num = str[i] - 'a' + 1;
+                hashValue = (hashValue + num * currentPower) % modulo;
+                currentPower = (currentPower * power) % modulo;
+            }
+            return (int)hashValue;
+        }
+        public static IList<int> FindSubstring(string s, string[] words)
+        {
+            // https://leetcode.cn/problems/substring-with-concatenation-of-all-words/description/
+            // 倒数第二个超出时间限制
+            List<int> result = new List<int>();
+            int k = words.Length * words[0].Length;
+            Dictionary<string, int> wordCount = new Dictionary<string, int>();
+            foreach (var word in words)
+            {
+                if (wordCount.ContainsKey(word))
+                    wordCount[word]++;
+                else
+                    wordCount[word] = 1;
+            }
+
+            for (int i = 0; i <= s.Length - k; i++)
+            {
+                Dictionary<string, int> seen = new Dictionary<string, int>();
+                int j = 0;
+                while (j < words.Length)
+                {
+                    string word = s.Substring(i + j * words[0].Length, words[0].Length);
+                    if (wordCount.ContainsKey(word))
+                    {
+                        if (seen.ContainsKey(word))
+                        {
+                            seen[word]++;
+                        }
+                        else
+                        {
+                            seen[word] = 1;
+                        }
+
+                        // 如果某个单词出现次数超过其在 words 中的次数，提前剪枝
+                        if (seen[word] > wordCount[word])
+                        {
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        break;
+                    }
+                    j++;
+                }
+                if (j == words.Length)
+                    result.Add(i);
+            }
+            return result;  
+        }
         public static IList<int> FindAnagrams(string s, string p)
         {
-            // 
+            // https://leetcode.cn/problems/find-all-anagrams-in-a-string/description/
+            int[] sCount = new int[26];
+            int[] pCount = new int[26];
+            List<int> result = new List<int>();
+            for (int i = 0; i < p.Length; i++)
+            {
+                pCount[p[i] - 'a']++;
+            }
+
+            for (int i = 0; i < s.Length; i++)
+            {
+                // in
+                sCount[s[i] - 'a']++;
+
+                int left = i - p.Length + 1;
+                if(left < 0)
+                    continue;
+                // updata
+                if(AreCountsEqual(sCount, pCount))
+                    result.Add(left);
+                // out
+                sCount[s[left] - 'a']--;
+            }
+            return result;
         }
         public static bool CheckInclusion(string s1, string s2)
         {
@@ -39,6 +162,12 @@ namespace LeetCode
             }
             return false;
         }
+        /// <summary>
+        /// 判断两个数组是否完全一样
+        /// </summary>
+        /// <param name="count1"></param>
+        /// <param name="count2"></param>
+        /// <returns></returns>
         static bool AreCountsEqual(int[] count1, int[] count2)
         {
             for (int i = 0; i < count1.Length; i++) {

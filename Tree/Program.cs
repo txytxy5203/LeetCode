@@ -4,8 +4,8 @@ using System.Text;
 
 
 int[] list1 = { 1, -1, -3, -2, 3 };
-int[] list2 = { 0, -1, -1, -1, -1 };
-var a = String_.CheckInclusion("ab", "eidboaoo");
+string[] list2 = { "ab", "ba", "ba" };
+var a = String_.MaximumLengthSubstring("aaaa");
 Console.WriteLine(a);
 
 
