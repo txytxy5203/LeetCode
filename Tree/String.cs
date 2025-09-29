@@ -1,13 +1,16 @@
 ﻿using System.Collections.Specialized;
+using System.ComponentModel.Design;
 using System.Text;
 
 namespace LeetCode
 {
     public static class String_
     {
+        
         public static int MaximumLengthSubstring(string s)
         {
             // https://leetcode.cn/problems/maximum-length-substring-with-two-occurrences/description/
+            // 双指针的模板
             int left = 0;
             int ans = 0;
             int[] count = new int[26];

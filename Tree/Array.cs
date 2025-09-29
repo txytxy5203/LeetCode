@@ -12,6 +12,30 @@ namespace LeetCode
 {
     public static class Array_
     {
+        public static int LongestSubarray(int[] nums)
+        {
+            // https://leetcode.cn/problems/longest-subarray-of-1s-after-deleting-one-element/description/
+            int zero = 0;
+            int ans = 0;
+            int left = 0;
+            for (int i = 0; i < nums.Length; i++)
+            {
+                // in
+                if (nums[i] == 0)
+                    zero++;
+
+                // out
+                while (zero > 1)
+                {
+                    if (nums[left] == 0)
+                        zero--;
+                    left++;
+                }
+                // update
+                ans = Math.Max(ans, i - left + 1);
+            }
+            return ans - 1;
+        }
         public static int[] GetSubarrayBeauty(int[] nums, int k, int x)
         {
             // https://leetcode.cn/problems/sliding-subarray-beauty/description/
