@@ -12,6 +12,24 @@ namespace LeetCode
 {
     public static class Array_
     {
+        public static int MinRemoval(int[] nums, int k)
+        {
+            // https://leetcode.cn/problems/minimum-removals-to-balance-array/description/
+            // 先排序
+            // 实际上还是去找子数组的长度！！！  那就使用滑动窗口
+            Array.Sort(nums);
+            int l = 0;
+            int max = 0;
+            for (int i = 0; i < nums.Length; i++)
+            {
+                // in
+                // out
+                while ((long)nums[l] * k < nums[i])
+                    l++;
+                max = Math.Max(max, i - l + 1); 
+            }
+            return nums.Length - max;
+        }
         public static int LongestSubarray(int[] nums)
         {
             // https://leetcode.cn/problems/longest-subarray-of-1s-after-deleting-one-element/description/

@@ -3,9 +3,9 @@ using System.Net.WebSockets;
 using System.Text;
 
 
-int[] list1 = { 1, -1, -3, -2, 3 };
+int[] list1 = { 32, 607, 740, 134, 944, 91, 410, 155, 493, 89, 12 };
 string[] list2 = { "ab", "ba", "ba" };
-var a = String_.MaximumLengthSubstring("aaaa");
+var a = Array_.MinRemoval(list1, 10);
 Console.WriteLine(a);
 
 
