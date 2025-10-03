@@ -6,7 +6,30 @@ namespace LeetCode
 {
     public static class String_
     {
-        
+        public static int EqualSubstring(string s, string t, int maxCost)
+        {
+            // https://leetcode.cn/problems/get-equal-substrings-within-budget/description/
+            // 依旧是双指针
+
+            int max = 0;
+            int cost = 0;
+            int left = 0;
+            for (int i = 0; i < s.Length; i++)
+            {
+                // in
+                cost += Math.Abs(s[i] - t[i]);
+
+                // out
+                while (cost > maxCost)
+                {
+                    cost -= Math.Abs(s[left] - t[left]);
+                    left++;
+                }
+                // update
+                max = Math.Max(max, i - left + 1);
+            }
+            return max;
+        }
         public static int MaximumLengthSubstring(string s)
         {
             // https://leetcode.cn/problems/maximum-length-substring-with-two-occurrences/description/

@@ -12,6 +12,27 @@ namespace LeetCode
 {
     public static class Array_
     {
+        public static int TotalFruit(int[] fruits)
+        {
+            // https://leetcode.cn/problems/fruit-into-baskets/description/
+            Dictionary<int, int> record = new Dictionary<int, int>();
+            int max = 0;
+            int left = 0;
+            for (int i = 0; i < fruits.Length; i++)
+            {
+                // in
+                record[fruits[i]] = i;
+
+                if (record.Count > 2)
+                {
+                    int jump = record[fruits[left]] + 1;
+                    record.Remove(fruits[left]);
+                    left = jump;
+                }
+                max = Math.Max(max, i - left + 1);
+            }
+            return max; 
+        }
         public static int MinRemoval(int[] nums, int k)
         {
             // https://leetcode.cn/problems/minimum-removals-to-balance-array/description/

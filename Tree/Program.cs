@@ -3,9 +3,9 @@ using System.Net.WebSockets;
 using System.Text;
 
 
-int[] list1 = { 32, 607, 740, 134, 944, 91, 410, 155, 493, 89, 12 };
+int[] list1 = { 1, 0, 1, 4, 1, 4, 1, 2, 3 };
 string[] list2 = { "ab", "ba", "ba" };
-var a = Array_.MinRemoval(list1, 10);
+var a = Array_.TotalFruit(list1);
 Console.WriteLine(a);
 
 
