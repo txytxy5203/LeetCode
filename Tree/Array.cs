@@ -13,9 +13,39 @@ namespace LeetCode
 {
     public static class Array_
     {
+        public static int MaxSubarrayLength(int[] nums, int k)
+        {
+            // https://leetcode.cn/problems/length-of-longest-subarray-with-at-most-k-frequency/description/
+        }
+        public static int MaximumUniqueSubarray(int[] nums)
+        {
+            // https://leetcode.cn/problems/maximum-erasure-value/description/
+            HashSet<int> record = new HashSet<int>();
+            int max = 0;
+            int curr = 0;
+            int left = 0;
+            for(int i = 0; i < nums.Length; i++)
+            {
+                if (record.Contains(nums[i]))
+                {
+                    while (record.Contains(nums[i]))
+                    {
+                        record.Remove(nums[left]);
+                        curr -= nums[left];
+                        left++;
+                    }
+                }
+                    record.Add(nums[i]);
+                    curr += nums[i];
+                
+                max = Math.Max(max, curr);                   
+            }
+            return max;
+        }
         public static int TotalFruit(int[] fruits)
         {
             // https://leetcode.cn/problems/fruit-into-baskets/description/
+            // 别老是想着改模板   模板就这样没问题
             Dictionary<int, int> record = new Dictionary<int, int>();
             int max = 0;
             int left = 0;
@@ -27,7 +57,7 @@ namespace LeetCode
                 else
                     record[fruits[i]] = 1;
 
-                while (record.Count > 2)
+                while (record.Count > 2)            // 这里的update处理非常值得处理 没那么复杂
                 {
                     record[fruits[left]]--;
                     if (record[fruits[left]] == 0)
@@ -856,7 +886,7 @@ namespace LeetCode
             //    return new int[0];
 
             //int n = nums.Length;
-            //int[] result = new int[n - k + 1];
+            //int[] record = new int[n - k + 1];
             //LinkedList<int> deque = new LinkedList<int>();
 
             //for (int i = 0; i < n; i++)
@@ -879,11 +909,11 @@ namespace LeetCode
             //    // 当窗口大小达到 k 时，记录当前窗口的最大值
             //    if (i >= k - 1)
             //    {
-            //        result[i - k + 1] = nums[deque.First.Value];
+            //        record[i - k + 1] = nums[deque.First.Value];
             //    }
             //}
 
-            //return result;
+            //return record;
             #endregion
         }
         public static int NumIslands(char[][] grid)

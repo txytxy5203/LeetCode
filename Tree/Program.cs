@@ -3,9 +3,9 @@ using System.Net.WebSockets;
 using System.Text;
 
 
-int[] list1 = { 1, 0, 1, 4, 1, 4, 1, 2, 3 };
+int[] list1 = { 4, 2, 4, 5, 6 };
 string[] list2 = { "ab", "ba", "ba" };
-var a = Array_.TotalFruit(list1);
+var a = Array_.MaximumUniqueSubarray(list1);
 Console.WriteLine(a);
 
 
