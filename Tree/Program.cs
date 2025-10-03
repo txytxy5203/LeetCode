@@ -3,9 +3,9 @@ using System.Net.WebSockets;
 using System.Text;
 
 
-int[] list1 = { 4, 2, 4, 5, 6 };
+int[] list1 = { 1, 2, 3, 1, 2, 3, 1, 2 };
 string[] list2 = { "ab", "ba", "ba" };
-var a = Array_.MaximumUniqueSubarray(list1);
+var a = Array_.MaxSubarrayLength(list1, 2);
 Console.WriteLine(a);
 
 

@@ -16,6 +16,31 @@ namespace LeetCode
         public static int MaxSubarrayLength(int[] nums, int k)
         {
             // https://leetcode.cn/problems/length-of-longest-subarray-with-at-most-k-frequency/description/
+            Dictionary<int, int> record = new Dictionary<int, int>();
+            int left = 0;
+            int max = 0;
+            for (int i = 0; i < nums.Length; i++)
+            {
+                // in
+                if (record.ContainsKey(nums[i]))
+                {
+                    record[nums[i]]++;
+                }
+                else
+                {
+                    record[nums[i]] = 1;
+                }
+                // update
+                while (record[nums[i]] > k)             // 这里不需要dict中每个都看
+                {
+                    record[nums[left]]--;
+                    if (record[nums[left]] == 0)
+                        record.Remove(nums[left]);
+                    left++;
+                }
+                max = Math.Max(max, i - left + 1);
+            }
+            return max;
         }
         public static int MaximumUniqueSubarray(int[] nums)
         {
