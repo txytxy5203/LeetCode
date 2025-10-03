@@ -6,6 +6,42 @@ namespace LeetCode
 {
     public static class String_
     {
+        public static int MaxConsecutiveAnswers(string answerKey, int k)
+        {
+            // https://leetcode.cn/problems/maximize-the-confusion-of-an-exam/description/
+            int curr = 0;
+            int left = 0;
+            int max = 0;
+            // 'T'
+            for (int i = 0; i < answerKey.Length; i++)
+            {
+                if (answerKey[i] == 'T')
+                    curr++;
+                while (curr > k)
+                {
+                    if (answerKey[left] == 'T')
+                        curr--;
+                    left++;
+                }
+                max = Math.Max(max, i  - left + 1);
+            }
+            curr = 0;
+            left = 0;
+            // 'F'
+            for (int i = 0; i < answerKey.Length; i++)
+            {
+                if (answerKey[i] == 'F')
+                    curr++;
+                while (curr > k)
+                {
+                    if (answerKey[left] == 'F')
+                        curr--;
+                    left++;
+                }
+                max = Math.Max(max, i - left + 1);
+            }
+            return max;
+        }
         public static int EqualSubstring(string s, string t, int maxCost)
         {
             // https://leetcode.cn/problems/get-equal-substrings-within-budget/description/
