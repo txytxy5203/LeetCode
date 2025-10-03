@@ -7,6 +7,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using System.Threading.Tasks.Sources;
 
 namespace LeetCode
 {
@@ -21,13 +22,17 @@ namespace LeetCode
             for (int i = 0; i < fruits.Length; i++)
             {
                 // in
-                record[fruits[i]] = i;
+                if (record.ContainsKey(fruits[i]))
+                    record[fruits[i]]++;
+                else
+                    record[fruits[i]] = 1;
 
-                if (record.Count > 2)
+                while (record.Count > 2)
                 {
-                    int jump = record[fruits[left]] + 1;
-                    record.Remove(fruits[left]);
-                    left = jump;
+                    record[fruits[left]]--;
+                    if (record[fruits[left]] == 0)
+                        record.Remove(fruits[left]);
+                    left++; 
                 }
                 max = Math.Max(max, i - left + 1);
             }
