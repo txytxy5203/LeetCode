@@ -6,6 +6,34 @@ namespace LeetCode
 {
     public static class String_
     {
+        public static int LongestSemiRepetitiveSubstring(string s)
+        {
+            // https://leetcode.cn/problems/find-the-longest-semi-repetitive-substring/description/
+            if (s.Length == 1)
+                return 1;
+            
+            int max = 0;
+            int left = 0;
+            int num = 0;
+            for (int i = 1; i < s.Length; i++)
+            {
+                // in
+                if (s[i] == s[i - 1])
+                    num++;
+
+                // update
+                while (num > 1)
+                {
+                    if (s[left] == s[left + 1])
+                    {
+                        num--;
+                    }
+                    left++;
+                }
+                max = Math.Max(max, i - left + 1);
+            }
+            return max; 
+        }
         public static int MaxConsecutiveAnswers(string answerKey, int k)
         {
             // https://leetcode.cn/problems/maximize-the-confusion-of-an-exam/description/

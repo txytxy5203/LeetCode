@@ -13,6 +13,54 @@ namespace LeetCode
 {
     public static class Array_
     {
+        public static int MinOperations(int[] nums, int x)
+        {
+            // https://leetcode.cn/problems/minimum-operations-to-reduce-x-to-zero/description/
+            int left = 0;
+            int min = int.MaxValue;
+            int curr = 0;
+            int sum = nums.Sum();
+            for (int i = 0; i < nums.Length; i++)
+            {
+                // in
+                curr += nums[i];
+
+                int result = sum - curr; 
+                while (result < x)
+                {
+                    curr -= nums[left];
+                    result = sum - curr;
+                    left++;
+                    if(left > i)
+                        break;
+                }
+                if(result == x)
+                    min = Math.Min(min, nums.Length - (i - left + 1));
+
+            }
+            return min != int.MaxValue ? min : -1;
+        }
+        public static int LongestOnes(int[] nums, int k)
+        {
+            // https://leetcode.cn/problems/max-consecutive-ones-iii/description/
+            int left = 0;
+            int curr = 0;
+            int max = 0;
+            for (int i = 0; i < nums.Length; i++)
+            {
+                if (nums[i] == 0)
+                    curr++;
+
+                while (curr > k)
+                {
+                    if (nums[left] == 0)
+                        curr--;
+                    left++;
+                }
+                max = Math.Max(max, i - left + 1);
+            }
+            return max;
+        }
         public static int MaxSubarrayLength(int[] nums, int k)
         {
             // https://leetcode.cn/problems/length-of-longest-subarray-with-at-most-k-frequency/description/
