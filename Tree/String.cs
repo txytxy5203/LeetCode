@@ -1,11 +1,52 @@
 ﻿using System.Collections.Specialized;
 using System.ComponentModel.Design;
+using System.Numerics;
 using System.Text;
 
 namespace LeetCode
 {
     public static class String_
     {
+        public static int TakeCharacters(string s, int k)
+        {
+            // https://leetcode.cn/problems/take-k-of-each-character-from-left-and-right/description/
+            int[] total = new int[3];
+            for (int i = 0; i < s.Length; i++)
+            {
+                total[s[i] - 'a']++;
+            }
+            foreach (var num in total)
+            {
+                if (num < k)
+                    return -1;
+            }
+
+            int max = 0;
+            int left = 0;   
+            for (int i = 0; i < s.Length; i++)
+            {
+                int index = s[i] - 'a';
+                // in
+                total[index]--;
+                // update
+                while (total[index] < k)        // 这里不需要每一个都去判断小于k
+                {
+                    total[s[left] - 'a']++;     // 然后这里一定要注意是left
+                    left++;
+                }
+                max = Math.Max(max, i - left + 1);
+            }
+            return s.Length - max;
+        }
+        static bool TakeCharactersHelper(int[] ints, int k)
+        {
+            for (int i = 0; i < ints.Length; i++)
+            {
+                if (ints[i] < k)
+                    return true;
+            }
+            return false;
+        }
         public static int LongestSemiRepetitiveSubstring(string s)
         {
             // https://leetcode.cn/problems/find-the-longest-semi-repetitive-substring/description/

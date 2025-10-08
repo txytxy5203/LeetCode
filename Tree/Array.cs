@@ -13,6 +13,57 @@ namespace LeetCode
 {
     public static class Array_
     {
+        public static int MaximumWhiteTiles(int[][] tiles, int carpetLen)
+        {
+            // https://leetcode.cn/problems/maximum-white-tiles-covered-by-a-carpet/description/
+            // 将每一行数组看成一个元素  在上面滑动
+            Array.Sort(tiles, (a,b) => a[0].CompareTo(b[0]));           // 比较器这种写法一定要会！！！
+            int left = 0;
+         
+            int cover = 0;          // cover始终是完整的区间长度和
+            int max = 0;
+            for (int right = 0; right < tiles.Length; right++)
+            {
+                // in
+                cover += tiles[right][1] - tiles[right][0] + 1;
+
+
+                // update
+                int carpenLeft = tiles[right][1] - carpetLen + 1;       // 毯子左端点
+                while (carpenLeft > tiles[left][1])
+                {
+                    cover -= tiles[left][1] - tiles[left][0] + 1;
+                    left++;
+                }
+                int unCover = Math.Max(carpenLeft - tiles[left][0], 0);         // 一定要注意这里要不要加1
+                max = Math.Max(max, cover - unCover);
+            }
+            return max;
+        }
+        public static int LongestEqualSubarray(IList<int> nums, int k)
+        {
+            // https://leetcode.cn/problems/find-the-longest-equal-subarray/description/
+            // 这题的处理还是有点摸不着头脑  为什么要这样
+            Dictionary<int, List<int>> record = new Dictionary<int, List<int>>();
+            int max = 0;
+            for (int i = 0; i < nums.Count; i++)
+            {
+                record.TryAdd(nums[i], new List<int>());
+                record[nums[i]].Add(i);
+            }
+
+            foreach (var list in record.Values)                         
+            {
+                int left = 0;
+                for (int right = 0; right < list.Count; right++)
+                {
+                    while (list[right] - list[left] - (right - left) > k)
+                        left++;
+                    max = Math.Max(max, right - left + 1);
+                }
+            }
+            return max;
+        }
         public static int MaxFrequency(int[] nums, int k)
         {
             // https://leetcode.cn/problems/frequency-of-the-most-frequent-element/description/
