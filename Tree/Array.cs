@@ -13,6 +13,25 @@ namespace LeetCode
 {
     public static class Array_
     {
+        public static int MaxFrequency(int[] nums, int k)
+        {
+            // https://leetcode.cn/problems/frequency-of-the-most-frequent-element/description/
+            Array.Sort(nums);
+            int max = 1;
+            int left = 0;
+            long curr = 0;
+            for (int right = 1; right < nums.Length; right++)
+            {
+                curr += (long)(nums[right] - nums[right - 1]) * (right - left);
+                while (curr > k)
+                {
+                    curr -= nums[right] - nums[left];
+                    left++;
+                }
+                max = Math.Max(max, right - left + 1);
+            }
+            return max;
+        }
         public static int MaximumBeauty(int[] nums, int k)
         {
             // https://leetcode.cn/problems/maximum-beauty-of-an-array-after-applying-operation/description/
