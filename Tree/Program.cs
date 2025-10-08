@@ -3,9 +3,9 @@ using System.Net.WebSockets;
 using System.Text;
 
 
-int[] list1 = { 1,1 };
+int[] list1 = { 81, 46, 85 };
 string[] list2 = { "ab", "ba", "ba" };
-var a = String_.LongestSemiRepetitiveSubstring("111111");
+var a = Array_.MaximumBeauty(list1, 23);
 Console.WriteLine(a);
 
 

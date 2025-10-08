@@ -13,6 +13,52 @@ namespace LeetCode
 {
     public static class Array_
     {
+        public static int MaximumBeauty(int[] nums, int k)
+        {
+            // https://leetcode.cn/problems/maximum-beauty-of-an-array-after-applying-operation/description/
+            Array.Sort(nums);
+            int max = 0;
+            int curr = 0;
+            int avg = 0;
+            int left = 0;
+            curr += nums[left] * 2;
+            for (int i = 1; i < nums.Length; i++)
+            {
+                // in
+                curr += nums[i] - nums[i - 1];
+                avg = curr / 2;
+
+                // update
+                while (nums[left] < avg - k || nums[left] > avg + k ||
+                       nums[i] < avg - k || nums[i] > avg + k)
+                {
+                    curr -= nums[left];
+                    left++;
+                    curr += nums[left];
+                    avg = curr / 2;
+                    if (left >= nums.Length || left >= i)
+                        break;
+                }
+                max = Math.Max(max, i - left + 1);
+            }
+            return max;
+        }
+        public static int MaximumBeauty2(int[] nums, int k)
+        {       
+            // 就是看nums[left]和nums[right]有没有交集
+            Array.Sort(nums);
+            int max = 0;
+            int left = 0;
+            for (int right = 0; right < nums.Length; right++)
+            {
+                while (nums[right] - nums[left] > 2 * k)
+                {
+                    left++;
+                }
+                max = Math.Max(max, right - left + 1);
+            }
+            return max;
+        }
         public static int MinOperations(int[] nums, int x)
         {
             // https://leetcode.cn/problems/minimum-operations-to-reduce-x-to-zero/description/
@@ -608,7 +654,7 @@ namespace LeetCode
         }
         public static double FindMaxAverage(int[] nums, int k)
         {
-            // https://leetcode.cn/problems/maximum-average-subarray-i/description/
+            // https://leetcode.cn/problems/maximum-average-subarray-right/description/
             int currSum = 0;
             int max = int.MinValue;
             int i = 0;
@@ -802,11 +848,11 @@ namespace LeetCode
             // https://leetcode.cn/problems/container-with-most-water/description/
             #region 暴力解法无法AC
             //int max = 0;
-            //for (int i = 0; i < height.Length; i++)
+            //for (int right = 0; right < height.Length; right++)
             //{
-            //    for (int j = i + 1; j < height.Length; j++)
+            //    for (int j = right + 1; j < height.Length; j++)
             //    {
-            //        max = Math.Max(max, (j - i) * Math.Min(height[i], height[j]));
+            //        max = Math.Max(max, (j - right) * Math.Min(height[right], height[j]));
             //    }
             //}
             //return max;
@@ -833,7 +879,7 @@ namespace LeetCode
         }
         public static int[] NextGreaterElement(int[] nums1, int[] nums2)
         {
-            // https://leetcode.cn/problems/next-greater-element-i/description/
+            // https://leetcode.cn/problems/next-greater-element-right/description/
             Stack<int> stack = new Stack<int>();
             Dictionary<int, int> dict = new Dictionary<int, int>();
             Dictionary<int, int> valueIndex = new Dictionary<int, int>();
@@ -962,27 +1008,27 @@ namespace LeetCode
             //int[] record = new int[n - k + 1];
             //LinkedList<int> deque = new LinkedList<int>();
 
-            //for (int i = 0; i < n; i++)
+            //for (int right = 0; right < n; right++)
             //{
             //    // 移除队列中所有小于当前元素的索引
-            //    while (deque.Count > 0 && nums[deque.Last.Value] <= nums[i])
+            //    while (deque.Count > 0 && nums[deque.Last.Value] <= nums[right])
             //    {
             //        deque.RemoveLast();
             //    }
 
             //    // 添加当前元素的索引到队列
-            //    deque.AddLast(i);
+            //    deque.AddLast(right);
 
             //    // 移除队列中不在窗口范围内的索引
-            //    if (deque.First.Value <= i - k)
+            //    if (deque.First.Value <= right - k)
             //    {
             //        deque.RemoveFirst();
             //    }
 
             //    // 当窗口大小达到 k 时，记录当前窗口的最大值
-            //    if (i >= k - 1)
+            //    if (right >= k - 1)
             //    {
-            //        record[i - k + 1] = nums[deque.First.Value];
+            //        record[right - k + 1] = nums[deque.First.Value];
             //    }
             //}
 
