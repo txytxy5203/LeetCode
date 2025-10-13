@@ -19,13 +19,15 @@ namespace LeetCode
         public static int MinSubArrayLen(int target, int[] nums)
         {
             // https://leetcode.cn/problems/minimum-size-subarray-sum/description/
+            // 这一题和模板不一样  需要注意
+            // 一般滑动窗口找最长的子数组 但是这一题是最短的 所以有一些不一样
             int left = 0;
             int min = int.MaxValue;
             int curr = 0;
             for (int i = 0; i < nums.Length; i++)
             {
                 curr += nums[i];
-                while (curr >= target)
+                while (curr >= target)          //我这个是灵神的while内更新的写法
                 {
                     min = Math.Min(min, i - left + 1);
                     curr -= nums[left];

@@ -16,7 +16,7 @@ int[][] list2 = { new int[]  {2,8 },
 };
 int[] ints = { 1, 1, 1, 1, 1, 1, 1, 1 };
 List<int> list3 = new List<int>() { 4, 4, 4, 3, 4 };
-var a = Array_.MinSubArrayLen(11, ints);
+var a = String_.ShortestBeautifulSubstring("100011001", 3);
 Console.WriteLine(a);
 
 

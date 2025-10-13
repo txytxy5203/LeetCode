@@ -7,6 +7,37 @@ namespace LeetCode
 {
     public static class String_
     {
+        public static string ShortestBeautifulSubstring(string s, int k)
+        {
+            // https://leetcode.cn/problems/shortest-and-lexicographically-smallest-beautiful-string/description/
+            if(s.Replace("0","").Length < k)
+                return string.Empty;
+            int curr = 0;
+            int left = 0;
+            string ans = s;
+            for (int i = 0; i < s.Length; i++)
+            {
+                // in
+                if (s[i] == '1')
+                    curr++;
+
+                while (curr > k || s[left] == '0')          // 这里这个 == '0'也很关键
+                {
+                    if (s[left] == '1')
+                        curr--;
+                    left++;
+                }
+                if(curr == k)
+                {
+                    string sub = s.Substring(left, i - left + 1);
+                    // 两个字符串比较字典序
+                    if (sub.Length < ans.Length || 
+                        sub.Length == ans.Length && sub.CompareTo(ans) < 0)
+                        ans = sub;
+                }
+            }
+            return ans; 
+        }     
         public static int TakeCharacters(string s, int k)
         {
             // https://leetcode.cn/problems/take-k-of-each-character-from-left-and-right/description/
