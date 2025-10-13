@@ -3,7 +3,10 @@ using System.Buffers;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Numerics;
+using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
@@ -13,6 +16,48 @@ namespace LeetCode
 {
     public static class Array_
     {
+        public static int MaxTotalFruits(int[][] fruits, int startPos, int k)
+        {
+            // https://leetcode.cn/problems/maximum-fruits-harvested-after-at-most-k-steps/description/
+            int max = 0;
+            int curr = 0;
+            int left = startPos - k;
+            for (int i = left; i <= startPos + k; i++)
+            {
+                // in
+                int num = MaxTotalFruitsHelper(fruits, i);
+                curr += num;
+                if (i < startPos)
+                    continue;
+
+                // out
+                while (Math.Min(i - startPos, startPos - left) + i - left > k && left < startPos)       // 这里取min很关键
+                {
+                    num = MaxTotalFruitsHelper(fruits, left);
+                    curr -= num;
+                    left++;
+                }
+                max = Math.Max(max, curr);
+            }
+            return max;
+        }
+        static int MaxTotalFruitsHelper(int[][] fruits, int index)
+        {
+            // 这里用二分查找
+            int left = 0;
+            int right = fruits.Length - 1;
+            while (left <= right)
+            {
+                int mid = (left + right) / 2;
+                if (fruits[mid][0] == index)
+                    return fruits[mid][1];
+                else if (fruits[mid][0] < index)
+                    left = mid + 1;
+                else
+                    right = mid - 1;
+            }
+            return 0;
+        }
         public static int MaximumWhiteTiles(int[][] tiles, int carpetLen)
         {
             // https://leetcode.cn/problems/maximum-white-tiles-covered-by-a-carpet/description/
