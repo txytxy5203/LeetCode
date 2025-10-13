@@ -14,8 +14,9 @@ int[][] list2 = { new int[]  {2,8 },
                     new int[]{6,3 },
                     new int[]{8,6 }
 };
+int[] ints = { 1, 1, 1, 1, 1, 1, 1, 1 };
 List<int> list3 = new List<int>() { 4, 4, 4, 3, 4 };
-var a = Array_.MaxTotalFruits(list1, 5,4);
+var a = Array_.MinSubArrayLen(11, ints);
 Console.WriteLine(a);
 
 

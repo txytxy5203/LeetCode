@@ -16,6 +16,24 @@ namespace LeetCode
 {
     public static class Array_
     {
+        public static int MinSubArrayLen(int target, int[] nums)
+        {
+            // https://leetcode.cn/problems/minimum-size-subarray-sum/description/
+            int left = 0;
+            int min = int.MaxValue;
+            int curr = 0;
+            for (int i = 0; i < nums.Length; i++)
+            {
+                curr += nums[i];
+                while (curr >= target)
+                {
+                    min = Math.Min(min, i - left + 1);
+                    curr -= nums[left];
+                    left++;
+                }                                           
+            }
+            return min != int.MaxValue ? min : 0;
+        }
         public static int MaxTotalFruits(int[][] fruits, int startPos, int k)
         {
             // https://leetcode.cn/problems/maximum-fruits-harvested-after-at-most-k-steps/description/
